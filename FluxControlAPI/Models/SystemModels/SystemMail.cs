@@ -37,9 +37,9 @@ namespace FluxControlAPI.Models.SystemModels
                     client.ServerCertificateValidationCallback = (s, c, h, e) => true;
                     #endif
 
-                    client.Connect("smtp-relay.sendinblue.com", 587, false);
+                    client.Connect(settings.Mailer.smtp, settings.Mailer.port, false);
 
-                    client.Authenticate("emurb.sistema@gmail.com", "R8kyPf6D4QWMApKT");
+                    client.Authenticate(settings.Mailer.login, settings.Mailer.password);
 
                     client.Send(message);
                     client.Disconnect(true);

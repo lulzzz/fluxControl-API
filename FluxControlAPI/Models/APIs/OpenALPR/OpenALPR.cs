@@ -13,7 +13,7 @@ namespace FluxControlAPI.Models.APIs.OpenALPR
 
         public static async Task<string> ProcessImage(byte[] bufferBytes)
         {
-            string SECRET_KEY = "sk_658a8b17b8e5a26b537bd093";
+            string SECRET_KEY = settings.Secrets.OpenALPR.secretKey;
 
             byte[] bytes = bufferBytes;
             string imagebase64 = Convert.ToBase64String(bytes);
