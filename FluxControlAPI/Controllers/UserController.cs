@@ -5,7 +5,6 @@ using System.Threading.Tasks;
 using FluxControlAPI.Models.DataModels;
 using FluxControlAPI.Models.DataModels.BusinessRule;
 using Microsoft.AspNetCore.Mvc;
-using FluxControlAPI.Models.SystemModels;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -13,6 +12,8 @@ using System.IdentityModel.Tokens.Jwt;
 using Microsoft.Extensions.Configuration;
 using FluxControlAPI.Models.Security;
 using Microsoft.IdentityModel.Tokens;
+using FluxControlAPI.Models.SystemModels.Mailer;
+using FluxControlAPI.Models.SystemModels.UserToken;
 
 namespace FluxControlAPI.Controllers
 {
@@ -22,6 +23,19 @@ namespace FluxControlAPI.Controllers
     [Route("API/[controller]")]
     public class UserController : ControllerBase
     {
+        private string _smtp { get; set; }
+        private int _port { get; set; }
+        private string _login { get; set; }
+        private string _password { get; set; }
+
+        public UserController(IConfiguration configuration)
+        {
+            this._smtp = configuration.GetSection("Secrets:Mailer:smtp").Get<string>();
+            this._port = configuration.GetSection("Secrets:Mailer:port").Get<int>();
+            this._login = configuration.GetSection("Secrets:Mailer:login").Get<string>();
+            this._password = configuration.GetSection("Secrets:Mailer:password").Get<string>();
+        }
+
 
         [HttpPost]
         [AllowAnonymous]
@@ -84,7 +98,7 @@ namespace FluxControlAPI.Controllers
                     user = userDAO.Get(id);
 
                 Token token = new Token(user);
-                var emurbMail = new SystemMail();
+                var emurbMail = new SystemMail(_smtp, _port, _login, _password);
 
                 if (user != null && emurbMail.SendNewPasswordMail(Request, token))
                 {
