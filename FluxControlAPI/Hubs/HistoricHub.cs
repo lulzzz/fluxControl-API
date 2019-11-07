@@ -3,23 +3,21 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.SignalR;
-using ArduinoCommunication.Models;
 using FluxControlAPI.Models;
+using FluxControlAPI.Models.BusinessRule;
 
 namespace FluxControlAPI.Hubs
 {
     public class HistoricHub : Hub
     {
-        public async Task SendMessage(int status)
+        public async Task SendMessage(int message)
         {
-            SerialCommunication.CommunicationStatusType serialCommuncation = (SerialCommunication.CommunicationStatusType) status;
-            SerialCommunication.SendStatus(serialCommuncation);
-            await Clients.All.SendAsync("ReceiveMessage", serialCommuncation);
+            await Clients.All.SendAsync("ReceiveMessage", message);
         }
 
-        public async Task VehicleArrived(string licensePlate)
+        public async Task VehicleArrived(Bus bus)
         {
-            await Clients.All.SendAsync("VehicleArrived", licensePlate);
+            await Clients.All.SendAsync("VehicleArrived", bus);
         }
         
     }

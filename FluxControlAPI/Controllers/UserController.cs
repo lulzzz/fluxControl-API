@@ -191,7 +191,7 @@ namespace FluxControlAPI.Controllers
                 if (user.Id != 0)
                 {
                     Token token = new Token(user);
-                    var emurbMail = new SystemMail();
+                    var emurbMail = new SystemMail(_smtp, _port, _login, _password);
 
                     if (emurbMail.SendNewPasswordMail(Request, token))
                     {
