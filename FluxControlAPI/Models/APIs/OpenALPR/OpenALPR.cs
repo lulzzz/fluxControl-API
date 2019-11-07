@@ -10,10 +10,15 @@ namespace FluxControlAPI.Models.APIs.OpenALPR
     class OpenALPR
     {
         private static readonly HttpClient client = new HttpClient();
+        private string SECRET_KEY { get; set; }
 
-        public static async Task<string> ProcessImage(byte[] bufferBytes)
+        public OpenALPR(string secretKey)
         {
-            string SECRET_KEY = settings.Secrets.OpenALPR.secretKey;
+            SECRET_KEY = secretKey;
+        }
+
+        public async Task<string> ProcessImage(byte[] bufferBytes)
+        {
 
             byte[] bytes = bufferBytes;
             string imagebase64 = Convert.ToBase64String(bytes);

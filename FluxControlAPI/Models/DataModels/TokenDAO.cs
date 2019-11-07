@@ -1,5 +1,5 @@
 ﻿using FluxControlAPI.Models.DataModels.BusinessRule;
-using FluxControlAPI.Models.SystemModels;
+using FluxControlAPI.Models.SystemModels.UserToken;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
