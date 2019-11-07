@@ -10,8 +10,8 @@
 *.sln.docstates
 
 # Secrets
-FluxControlAPI\appsettings.json
-FluxControlAPI\appsettings.Development.json
+FluxControlAPI/appsettings.json
+FluxControlAPI/appsettings.Development.json
 
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
