@@ -8,11 +8,25 @@ using System.Threading.Tasks;
 using MailKit;
 using MimeKit;
 using MailKit.Net.Smtp;
+using FluxControlAPI.Models.SystemModels.UserToken;
 
-namespace FluxControlAPI.Models.SystemModels
+namespace FluxControlAPI.Models.SystemModels.Mailer
 {
-    public class SystemMail
+    class SystemMail
     {
+        private string Smtp { get; set; }
+        private int Port { get; set; }
+        private string Login { get; set; }
+        private string Password { get; set; }
+
+        public SystemMail(string smtp, int port, string login, string password)
+        {
+            this.Smtp = smtp;
+            this.Port = port;
+            this.Login = login;
+            this.Password = password;
+        }
+
         public bool SendNewPasswordMail(HttpRequest request, Token token)
         {
             try
@@ -37,9 +51,9 @@ namespace FluxControlAPI.Models.SystemModels
                     client.ServerCertificateValidationCallback = (s, c, h, e) => true;
                     #endif
 
-                    client.Connect("smtp-relay.sendinblue.com", 587, false);
+                    client.Connect(Smtp, Port, false);
 
-                    client.Authenticate("emurb.sistema@gmail.com", "R8kyPf6D4QWMApKT");
+                    client.Authenticate(Login, Password);
 
                     client.Send(message);
                     client.Disconnect(true);

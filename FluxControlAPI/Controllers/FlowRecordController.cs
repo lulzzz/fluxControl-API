@@ -11,6 +11,7 @@ using FluxControlAPI.Models.DataModels.BusinessRule;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
 namespace FluxControlAPI.Controllers
@@ -21,6 +22,13 @@ namespace FluxControlAPI.Controllers
     [Route("API/[controller]")]
     public class FlowRecordController : ControllerBase
     {
+        private string _secretKey { get; set; }
+
+        public FlowRecordController(IConfiguration configuration)
+        {
+            this._secretKey = configuration.GetSection("Secrets:OpenALPR:secretKey").Get<string>();
+        }
+
         [HttpPost]
         [Route("ProcessImageBytes")]
         public ActionResult ProcessImageBytes()
@@ -42,7 +50,7 @@ namespace FluxControlAPI.Controllers
                         while ((read = sourceStream.Read(buffer, 0, buffer.Length)) > 0)
                             targetStream.Write(buffer, 0, read);
 
-                        Task<string> recognizeTask = Task.Run(() => OpenALPR.ProcessImage(buffer));
+                        Task<string> recognizeTask = Task.Run(() => new OpenALPR(_secretKey).ProcessImage(buffer));
                         recognizeTask.Wait();
 
                         var response = JsonConvert.DeserializeObject<OpenALPRResponse>(recognizeTask.Result);

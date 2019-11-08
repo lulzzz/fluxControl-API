@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluxControlAPI.Models.SystemModels;
+using FluxControlAPI.Models.BusinessRule;
 
 namespace FluxControlAPI.Models
 {
@@ -18,9 +19,9 @@ namespace FluxControlAPI.Models
                 _hub = hub;
         }
 
-        public static Task SendNotificationAsync(string message)
+        public static Task NotifyBysArrivedAsync(Bus bus)
         {
-            return _hub.Clients.All.SendAsync("VehicleArrived", message);
+            return _hub.Clients.All.SendAsync("VehicleArrived", bus);
         }
     }
 }
