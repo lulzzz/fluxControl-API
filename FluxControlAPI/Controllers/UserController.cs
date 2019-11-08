@@ -73,8 +73,8 @@ namespace FluxControlAPI.Controllers
         }
 
         [HttpPost]
-        [Route("NewPassword")]
-        public ActionResult RequestPassword([FromBody] int id)
+        [Route("NewPassword/{id}")]
+        public ActionResult RequestPassword(int id)
         {
             try
             {
@@ -127,8 +127,8 @@ namespace FluxControlAPI.Controllers
 
         [HttpPost]
         [AllowAnonymous]
-        [Route("DefinePassword/{token}")]
-        public ActionResult SetPassword(string token, [FromBody] string password)
+        [Route("DefinePassword/{token}/{password}")]
+        public ActionResult SetPassword(string token, string password)
         {
             try
             {
