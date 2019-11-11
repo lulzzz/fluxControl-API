@@ -41,6 +41,23 @@ CREATE TABLE Users
 );
 GO
 
+CREATE TABLE ProviderRules
+(
+	Id				INT			NOT NULL	IDENTITY	PRIMARY KEY,
+	Tax				MONEY		NOT NULL,
+	Interval		DATETIME	NOT NULL
+);
+GO
+
+CREATE TABLE SuperUsers
+(
+	Id				INT				NOT NULL	REFERENCES Users(Id),
+	Configs			INT				NOT NULL	REFERENCES SuperUserConfigs(Id),
+
+	CONSTRAINT PK_SuperUser						PRIMARY KEY(Id)
+);
+GO
+
 CREATE TABLE Occurrences
 (
 	Id			INT			NOT NULL	IDENTITY	PRIMARY KEY,
@@ -63,10 +80,13 @@ GO
 
 CREATE TABLE Invoices
 (
-	Id			INT		NOT NULL	IDENTITY	PRIMARY KEY,
-	Total		MONEY	NOT NULL,
+	Id					INT			NOT NULL	IDENTITY	PRIMARY KEY,
+	GenerationDate		DATETIME	NOT NULL,
+	TaxConsidered		MONEY		NOT NULL,
+	IntervalConsidered	DATETIME	NOT NULL,
+	Total				MONEY		NOT NULL,
 
-	Company_Id	INT		NOT	NULL				REFERENCES Companies
+	Company_Id			INT				NOT	NULL			REFERENCES Companies
 );
 GO
 
@@ -76,8 +96,8 @@ CREATE TABLE FlowRecords
 	Arrival			DATETIME	NOT NULL,
 	Departure		DATETIME,
 
-	"User_Id"		INT			NOT NULL				REFERENCES Users,
 	Bus_Id			INT			NOT NULL				REFERENCES Buses,
+	"User_Id"		INT			NOT NULL				REFERENCES Users,
 	Invoice_Id		INT									REFERENCES Invoices
 );
 GO

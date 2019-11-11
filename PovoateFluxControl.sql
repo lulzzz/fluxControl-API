@@ -40,9 +40,26 @@ VALUES (27331, 'LMN-1234', 2)
 INSERT INTO Buses
 VALUES (27342, 'OPQ-1234', 3)
 
-SELECT * FROM Tokens
-
 SELECT company.*, bus.Id Bus_Id, bus.Number, bus.LicensePlate, bus.Company_Id
 FROM Companies company
 JOIN Buses bus ON bus.Company_Id = company.Id
 ORDER BY Company_Id
+
+SELECT * FROM Buses;
+SELECT * FROM Users;
+sp_help FlowRecords
+
+SELECT * FROM FlowRecords
+
+SELECT record.*, 
+bus.Id bus_Id, bus.Number, bus.LicensePlate, bus.Company_Id,
+_user.Id user_Id, _user.Registration, _user.Email, _user.Name, _user.Password, _user.Type
+FROM FlowRecords record
+JOIN Buses bus ON record.Bus_Id = bus.Id
+JOIN Users _user ON record.User_Id = _user.Id
+WHERE record.Departure IS NULL AND
+bus.Id = 1
+
+UPDATE Users
+SET Password = '12345'
+WHERE Type = 3
