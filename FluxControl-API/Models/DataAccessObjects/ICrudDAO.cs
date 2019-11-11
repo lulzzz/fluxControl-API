@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FluxControlAPI.Models.DataModels
+namespace FluxControlAPI.Models.DataAccessObjects
 {
     interface ICrudDAO<T>
     {
@@ -13,7 +13,7 @@ namespace FluxControlAPI.Models.DataModels
 
         T Get(int id);
 
-        bool Change(int id, T model);
+        bool Change(T model);
 
         bool Remove(int id);
     }

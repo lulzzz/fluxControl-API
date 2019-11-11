@@ -25,7 +25,9 @@ namespace FluxControlAPI.Models.APIs.OpenALPR
 
             var content = new StringContent(imagebase64);
 
-            var response = await client.PostAsync("https://api.openalpr.com/v2/recognize_bytes?recognize_vehicle=1&country=br&secret_key=" + SECRET_KEY, content).ConfigureAwait(false);
+            var response = await client.PostAsync(
+                "https://api.openalpr.com/v2/recognize_bytes?recognize_vehicle=0&country=br&secret_key=" + SECRET_KEY, content
+                ).ConfigureAwait(false);
 
             var buffer = await response.Content.ReadAsByteArrayAsync().ConfigureAwait(false);
             var byteArray = buffer.ToArray();

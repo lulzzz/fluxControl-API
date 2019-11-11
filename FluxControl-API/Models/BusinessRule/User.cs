@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FluxControlAPI.Models.DataModels.BusinessRule
+namespace FluxControlAPI.Models.DataAccessObjects.BusinessRule
 {
     public enum UserType
     {

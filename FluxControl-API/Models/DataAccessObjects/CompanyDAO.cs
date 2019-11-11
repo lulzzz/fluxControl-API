@@ -1,5 +1,5 @@
 ﻿using FluxControlAPI.Models.BusinessRule;
-using FluxControlAPI.Models.DataModels.BusinessRule;
+using FluxControlAPI.Models.DataAccessObjects.BusinessRule;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FluxControlAPI.Models.DataModels
+namespace FluxControlAPI.Models.DataAccessObjects
 {
     public class CompanyDAO : Database, ICrudDAO<Company>
     {
@@ -31,7 +31,7 @@ namespace FluxControlAPI.Models.DataModels
             return 0;
         }
 
-        public bool Change(int id, Company model)
+        public bool Change(Company model)
         {
             var cmd = new SqlCommand();
 
@@ -40,7 +40,7 @@ namespace FluxControlAPI.Models.DataModels
                                 SET Name = @Name, Thumbnail = @Registration, Invoice_Interval = @InvoiceInterval
                                 WHERE Id = @Id";
 
-            cmd.Parameters.AddWithValue("@Id", id);
+            cmd.Parameters.AddWithValue("@Id", model.Id);
             cmd.Parameters.AddWithValue("@Name", model.Name);
             cmd.Parameters.AddWithValue("@Thumbnail", model.Thumbnail);
             cmd.Parameters.AddWithValue("@InvoiceInterval", model.InvoiceInterval);

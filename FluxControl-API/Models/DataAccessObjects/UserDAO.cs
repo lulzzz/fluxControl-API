@@ -1,11 +1,12 @@
-﻿using FluxControlAPI.Models.DataModels.BusinessRule;
+﻿using FluxControlAPI.Models.BusinessRule;
+using FluxControlAPI.Models.DataAccessObjects.BusinessRule;
 using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FluxControlAPI.Models.DataModels
+namespace FluxControlAPI.Models.DataAccessObjects
 {
     public class UserDAO : Database, ICrudDAO<User>
     {
@@ -99,7 +100,7 @@ namespace FluxControlAPI.Models.DataModels
 
         }
 
-        public bool Change(int id, User model)
+        public bool Change(User model)
         {
             var cmd = new SqlCommand();
 
@@ -108,7 +109,7 @@ namespace FluxControlAPI.Models.DataModels
                                 SET Name = @Name, Registration = @Registration, Email = @Email, Type = @Type
                                 WHERE Id = @Id";
 
-            cmd.Parameters.AddWithValue("@Id", id);
+            cmd.Parameters.AddWithValue("@Id", model.Id);
             cmd.Parameters.AddWithValue("@Name", model.Name);
             cmd.Parameters.AddWithValue("@Registration", model.Registration);
             cmd.Parameters.AddWithValue("@Email", model.Email);

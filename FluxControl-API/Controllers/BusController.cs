@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluxControlAPI.Models.BusinessRule;
-using FluxControlAPI.Models.DataModels;
+using FluxControlAPI.Models.DataAccessObjects;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -77,11 +77,12 @@ namespace FluxControlAPI.Controllers
 
         [HttpPatch]
         [Authorize(Roles = "Manager, Administrator")]
-        [Route("Change/{id}")]
-        public ActionResult Change(int id, [FromBody] Bus bus)
+        [Route("Change/")]
+        public ActionResult Change([FromBody] Bus bus)
         {
+
             using (var busDAO = new BusDAO())
-                if (busDAO.Change(id, bus))
+                if (busDAO.Change(bus))
                     return StatusCode(200, new { Message = "Alterado com sucesso" });
 
             return StatusCode(304, new { Message = "Não alterado" });

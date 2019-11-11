@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using System;
 using Microsoft.AspNetCore.Authorization;
 using FluxControlAPI.Models.Security;
-using FluxControlAPI.Models.DataModels;
+using FluxControlAPI.Models.DataAccessObjects;
 using Microsoft.Extensions.Options;
 
 namespace FluxControlAPI

@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FluxControlAPI.Models.DataModels;
-using FluxControlAPI.Models.DataModels.BusinessRule;
+using FluxControlAPI.Models.DataAccessObjects;
+using FluxControlAPI.Models.DataAccessObjects.BusinessRule;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -69,11 +69,12 @@ namespace FluxControlAPI.Controllers
         }
 
         [HttpPatch]
-        [Route("Change/{id}")]
-        public ActionResult Change(int id, [FromBody] Company company)
+        [Route("Change/")]
+        public ActionResult Change([FromBody] Company company)
         {
+
             using (var companyDAO = new CompanyDAO())
-                if (companyDAO.Change(id, company))
+                if (companyDAO.Change(company))
                     return StatusCode(200, new { Message = "Alterado com sucesso" });
 
             return StatusCode(304, new { Message = "Não alterado" });

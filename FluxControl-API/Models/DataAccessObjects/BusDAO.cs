@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FluxControlAPI.Models.DataModels
+namespace FluxControlAPI.Models.DataAccessObjects
 {
     public class BusDAO : Database, ICrudDAO<Bus>
     {
@@ -20,7 +20,7 @@ namespace FluxControlAPI.Models.DataModels
 
             cmd.Connection = connection;
 
-            cmd.CommandText = @"SELECT * FROM FlowRecords 
+            cmd.CommandText = @"SELECT * FROM Buses 
                                 WHERE LicensePlate = @Identifier OR Number = @Identifier";
 
 
@@ -39,34 +39,6 @@ namespace FluxControlAPI.Models.DataModels
             }
 
             return null;
-        }
-
-        /// <summary>
-        /// Verifica se o ônibus esta dentro do terminal no momento da verificação.
-        /// </summary>
-        /// <param name="bus">Ônibus a ser verificado</param>
-        /// <returns>Se esta ou não dentro do terminal</returns>
-        public bool IsOnPlatform(Bus bus)
-        {
-            SqlCommand cmd = new SqlCommand();
-
-            cmd.Connection = connection;
-
-            cmd.CommandText = @"SELECT COUNT(bus.Id) FROM FlowRecords record
-                                JOIN Buses bus ON record.Bus_Id = bus.Id
-                                WHERE record.Departure IS NULL AND
-                                bus.Id = @Bus_Id
-                                ORDER BY Arrival DESC";
-
-            cmd.Parameters.AddWithValue("@Bus_Id", bus.Id);
-
-            using (SqlDataReader reader = cmd.ExecuteReader())
-            {
-                if (reader.Read())
-                    return (int) reader["count"] > 0;
-            }
-
-            return false;
         }
 
         #region CRUD
@@ -93,7 +65,7 @@ namespace FluxControlAPI.Models.DataModels
             return 0;
         }
 
-        public bool Change(int id, Bus model)
+        public bool Change(Bus model)
         {
             SqlCommand cmd = new SqlCommand();
 
@@ -102,8 +74,10 @@ namespace FluxControlAPI.Models.DataModels
             cmd.CommandText = @"UPDATE Buses 
                                 SET Number = @Number, 
                                 LicensePlate = @LicensePlate,
-                                Company_Id = @CompanyId";
+                                Company_Id = @CompanyId
+                                WHERE Id = @Id";
 
+            cmd.Parameters.AddWithValue("@Id", model.Id);
             cmd.Parameters.AddWithValue("@Number", model.Number);
             cmd.Parameters.AddWithValue("@LicensePlate", model.LicensePlate);
             cmd.Parameters.AddWithValue("@CompanyId", model.BusCompany);

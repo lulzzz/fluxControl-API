@@ -1,6 +1,6 @@
 ﻿using FluxControlAPI.Models.BusinessRule;
-using FluxControlAPI.Models.DataModels;
-using FluxControlAPI.Models.DataModels.BusinessRule;
+using FluxControlAPI.Models.DataAccessObjects;
+using FluxControlAPI.Models.DataAccessObjects.BusinessRule;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +14,6 @@ namespace FluxControlAPI.Models.BusinessRule
         public User RegistryClerk { get; set; }
         public Bus BusRegistered { get; set; }
         public DateTime Arrival { get; set; }
-        public DateTime Departure { get; set; }
+        public DateTime? Departure { get; set; }
     }
 }

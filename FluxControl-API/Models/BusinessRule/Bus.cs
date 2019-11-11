@@ -1,4 +1,4 @@
-﻿using FluxControlAPI.Models.DataModels.BusinessRule;
+﻿using FluxControlAPI.Models.DataAccessObjects.BusinessRule;
 using System;
 using System.Collections.Generic;
 using System.Linq;

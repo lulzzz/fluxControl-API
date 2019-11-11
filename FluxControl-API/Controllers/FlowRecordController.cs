@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using FluxControlAPI.Models;
 using FluxControlAPI.Models.APIs.OpenALPR;
 using FluxControlAPI.Models.APIs.OpenALPR.Models;
-using FluxControlAPI.Models.DataModels;
-using FluxControlAPI.Models.DataModels.BusinessRule;
+using FluxControlAPI.Models.DataAccessObjects;
+using FluxControlAPI.Models.DataAccessObjects.BusinessRule;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -18,7 +18,7 @@ namespace FluxControlAPI.Controllers
 {
     
     [ApiController]
-    // [Authorize("Bearer", Roles = "Operator")]
+    // [Authorize("Bearer", Roles = "System, Operator")]
     [Route("API/[controller]")]
     public class FlowRecordController : ControllerBase
     {
@@ -61,8 +61,7 @@ namespace FluxControlAPI.Controllers
                         using (var recordFlowDAO = new FlowRecordDAO())
                             recordFlowDAO.Register("XUMBADO ATENÇÃO", null);
 
-                            // Printa resultado
-                            //SystemNotifier.SendNotificationAsync(response);
+                        // SystemNotifier.SendNotificationAsync(response);
                             
                     }
 
@@ -76,13 +75,12 @@ namespace FluxControlAPI.Controllers
             {
                 return StatusCode(500);
             }
-
             
         }
 
         [HttpPost]
         [Route("Record")]
-        public ActionResult Record(int busNumber)
+        public ActionResult Record([FromBody] int busNumber)
         {
             try
             {
@@ -96,10 +94,13 @@ namespace FluxControlAPI.Controllers
                     int recordId = 0;
 
                     using (var FlowRecordDAO = new FlowRecordDAO())
-                        FlowRecordDAO.Register(busNumber.ToString(), user);
+                        recordId = FlowRecordDAO.Register(busNumber.ToString(), user);
 
                     if (recordId != 0)
                         return StatusCode(202, new { Message = "Registrado com sucesso" });
+
+                    else
+                        return StatusCode(304, new { Message = "Não foi possível efetuar o registro" });
                 }
 
                 return StatusCode(404, new { Message = "Usuário não encontrado" });
@@ -107,7 +108,7 @@ namespace FluxControlAPI.Controllers
 
             catch (Exception ex)
             {
-                return StatusCode(500, new { Exception = ex, Message = "Erro ao gravar registro no servidor" });
+                return StatusCode(500, new { Message = "Erro ao gravar registro no servidor" });
             }
             
         }

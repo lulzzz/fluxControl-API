@@ -1,4 +1,4 @@
-﻿using FluxControlAPI.Models.DataModels.BusinessRule;
+﻿using FluxControlAPI.Models.DataAccessObjects.BusinessRule;
 using FluxControlAPI.Models.SystemModels.UserToken;
 using System;
 using System.Collections.Generic;
@@ -6,7 +6,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FluxControlAPI.Models.DataModels
+namespace FluxControlAPI.Models.DataAccessObjects
 {
     public class TokenDAO : Database
     {
