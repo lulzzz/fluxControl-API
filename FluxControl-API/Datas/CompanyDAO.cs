@@ -1,5 +1,5 @@
 ﻿using FluxControlAPI.Models.BusinessRule;
-using FluxControlAPI.Models.DataAccessObjects.BusinessRule;
+using FluxControlAPI.Models.Datas.BusinessRule;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -7,7 +7,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FluxControlAPI.Models.DataAccessObjects
+namespace FluxControlAPI.Models.Datas
 {
     public class CompanyDAO : Database, ICrudDAO<Company>
     {

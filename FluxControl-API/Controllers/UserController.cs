@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FluxControlAPI.Models.DataAccessObjects;
-using FluxControlAPI.Models.DataAccessObjects.BusinessRule;
+using FluxControlAPI.Models.Datas;
+using FluxControlAPI.Models.Datas.BusinessRule;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
@@ -35,7 +35,6 @@ namespace FluxControlAPI.Controllers
             this._login = configuration.GetSection("Secrets:Mailer:login").Get<string>();
             this._password = configuration.GetSection("Secrets:Mailer:password").Get<string>();
         }
-
 
         [HttpPost]
         [AllowAnonymous]

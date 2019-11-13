@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using System;
 using Microsoft.AspNetCore.Authorization;
 using FluxControlAPI.Models.Security;
-using FluxControlAPI.Models.DataAccessObjects;
+using FluxControlAPI.Models.Datas;
 using Microsoft.Extensions.Options;
 
 namespace FluxControlAPI
@@ -27,6 +27,7 @@ namespace FluxControlAPI
             services.AddTransient<UserDAO>();
 
             var signingConfigurations = new SigningConfigurations();
+
             services.AddSingleton(signingConfigurations);
 
             var tokenConfigurations = new TokenConfigurations();
@@ -36,7 +37,6 @@ namespace FluxControlAPI
                     .Configure(tokenConfigurations);
 
             services.AddSingleton(tokenConfigurations);
-
 
             services.AddAuthentication(authOptions =>
             {

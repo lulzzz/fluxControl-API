@@ -5,7 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
-namespace FluxControlAPI.Models.DataAccessObjects
+namespace FluxControlAPI.Models.Datas
 {
     public abstract class Database : IDisposable
     {

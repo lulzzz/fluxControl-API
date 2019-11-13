@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FluxControlAPI.Models.DataAccessObjects
+namespace FluxControlAPI.Models.Datas
 {
     interface ICrudDAO<T>
     {

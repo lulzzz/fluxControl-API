@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using FluxControlAPI.Models.BusinessRule;
-using FluxControlAPI.Models.DataAccessObjects;
-using FluxControlAPI.Models.DataAccessObjects.BusinessRule;
+using FluxControlAPI.Models.Datas;
+using FluxControlAPI.Models.Datas.BusinessRule;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -17,10 +17,14 @@ namespace FluxControlAPI.Controllers
     public class InvoiceController : ControllerBase
     {
         [HttpPost]
-        [Route("GenerateInvoice/{company}")]
-        public ActionResult GenerateInvoice(Company company, [FromBody] DateTime begin)
+        [Route("GenerateInvoice/{companyId}")]
+        public ActionResult GenerateInvoice(int companyId, [FromBody] DateTime begin)
         {
+            Company company;
             Rules rules;
+
+            using (var companyDAO = new CompanyDAO())
+                company = companyDAO.Get(companyId);
 
             using (var providerDAO = new ProviderDAO())
                 rules = providerDAO.GetRules();

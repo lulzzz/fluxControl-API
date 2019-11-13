@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 using FluxControlAPI.Models;
 using FluxControlAPI.Models.APIs.OpenALPR;
 using FluxControlAPI.Models.APIs.OpenALPR.Models;
-using FluxControlAPI.Models.DataAccessObjects;
-using FluxControlAPI.Models.DataAccessObjects.BusinessRule;
+using FluxControlAPI.Models.Datas;
+using FluxControlAPI.Models.Datas.BusinessRule;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -30,27 +30,24 @@ namespace FluxControlAPI.Controllers
         }
 
         [HttpPost]
-        [Route("ProcessImageBytes")]
+        [Route("ProcessImageBytes/")]
         public ActionResult ProcessImageBytes()
         {
             try
-            {
-                var picture = Request.Body;
-                var pictureSize = (int) Request.ContentLength;
-                
-                if (picture != null || picture.Length > 0)
+            {                
+                if (Response.Body != null || Response.ContentLength > 0)
                 {
-                    using (MemoryStream targetStream = new MemoryStream())
+                    using (StreamReader targetStream = new StreamReader(Request.Body))
                     {
-                        Stream sourceStream = picture;
-                        
-                        byte[] buffer = new byte[pictureSize + 1];
-                        int read = 0;
 
-                        while ((read = sourceStream.Read(buffer, 0, buffer.Length)) > 0)
-                            targetStream.Write(buffer, 0, read);
+                        byte[] bytes;
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            Request.Body.CopyTo(memoryStream);
+                            bytes = memoryStream.ToArray();
+                        }
 
-                        Task<string> recognizeTask = Task.Run(() => new OpenALPR(_secretKey).ProcessImage(buffer));
+                        Task<string> recognizeTask = Task.Run(() => new OpenALPR(_secretKey).ProcessImage(bytes));
                         recognizeTask.Wait();
 
                         var response = JsonConvert.DeserializeObject<OpenALPRResponse>(recognizeTask.Result);
@@ -79,7 +76,7 @@ namespace FluxControlAPI.Controllers
         }
 
         [HttpPost]
-        [Route("Record")]
+        [Route("Record/")]
         public ActionResult Record([FromBody] int busNumber)
         {
             try

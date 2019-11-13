@@ -5,7 +5,7 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FluxControlAPI.Models.DataAccessObjects
+namespace FluxControlAPI.Models.Datas
 {
     public class InvoiceDAO : Database, ICrudDAO<Invoice>
     {

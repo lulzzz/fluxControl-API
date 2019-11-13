@@ -1,6 +1,6 @@
 ﻿using FluxControlAPI.Models.BusinessRule;
-using FluxControlAPI.Models.DataAccessObjects;
-using FluxControlAPI.Models.DataAccessObjects.BusinessRule;
+using FluxControlAPI.Models.Datas;
+using FluxControlAPI.Models.Datas.BusinessRule;
 using System;
 using System.Collections.Generic;
 using System.Linq;

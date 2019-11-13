@@ -1,5 +1,5 @@
-﻿using FluxControlAPI.Models.DataAccessObjects;
-using FluxControlAPI.Models.DataAccessObjects.BusinessRule;
+﻿using FluxControlAPI.Models.Datas;
+using FluxControlAPI.Models.Datas.BusinessRule;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
