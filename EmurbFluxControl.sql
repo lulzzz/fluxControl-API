@@ -9,7 +9,8 @@ CREATE TABLE Companies
 	Id					INT				NOT NULL	IDENTITY	PRIMARY KEY,
 	Name				VARCHAR(60)		NOT NULL,
 	Thumbnail			VARCHAR(MAX)	NOT NULL,
-	Invoice_Interval	SMALLINT		NOT NULL	DEFAULT 30
+	Invoice_Interval	SMALLINT		NOT NULL	DEFAULT 30,
+	Inactive			BIT							DEFAULT 0	
 );
 GO
 
@@ -18,6 +19,7 @@ CREATE TABLE Buses
 	Id				INT				NOT NULL	IDENTITY PRIMARY KEY,
 	Number			INT				NOT NULL,
 	LicensePlate	VARCHAR(10)		NOT NULL,
+	Inactive		BIT							DEFAULT 0,
 
 	Company_Id		INT				NOT NULL	REFERENCES Companies
 );
@@ -35,9 +37,11 @@ CREATE TABLE Users
 	Id				INT				NOT NULL	IDENTITY	PRIMARY KEY,
 	Name			VARCHAR(60)		NOT NULL,
 	Registration	INT				NOT NULL	UNIQUE,
-	Email			VARCHAR(60)		NOT NULL,
+	Email			VARCHAR(60)		NOT NULL	UNIQUE,
 	Password		VARCHAR(MAX),
-	Type			SMALLINT		NOT NULL				REFERENCES UserTypes
+	Type			SMALLINT		NOT NULL				REFERENCES UserTypes,
+	CreationDate	DATE			NOT NULL,
+	Inactive		BIT							DEFAULT 0
 );
 GO
 
@@ -49,19 +53,11 @@ CREATE TABLE ProviderRules
 );
 GO
 
-CREATE TABLE SuperUsers
-(
-	Id				INT				NOT NULL	REFERENCES Users(Id),
-	Configs			INT				NOT NULL	REFERENCES SuperUserConfigs(Id),
-
-	CONSTRAINT PK_SuperUser						PRIMARY KEY(Id)
-);
-GO
-
 CREATE TABLE Occurrences
 (
 	Id			INT			NOT NULL	IDENTITY	PRIMARY KEY,
 	Type		SMALLINT	NOT NULL				REFERENCES UserTypes,
+	Inactive	BIT						DEFAULT 0,
 
 	"User_Id"	INT			NOT NULL				REFERENCES Users
 );
@@ -85,6 +81,7 @@ CREATE TABLE Invoices
 	TaxConsidered		MONEY		NOT NULL,
 	IntervalConsidered	DATETIME	NOT NULL,
 	Total				MONEY		NOT NULL,
+	Inactive			BIT						DEFAULT 0
 
 	Company_Id			INT				NOT	NULL			REFERENCES Companies
 );
@@ -95,6 +92,7 @@ CREATE TABLE FlowRecords
 	Id				INT			NOT NULL	IDENTITY	PRIMARY KEY,
 	Arrival			DATETIME	NOT NULL,
 	Departure		DATETIME,
+	Inactive		BIT						DEFAULT 0,
 
 	Bus_Id			INT			NOT NULL				REFERENCES Buses,
 	"User_Id"		INT			NOT NULL				REFERENCES Users,
