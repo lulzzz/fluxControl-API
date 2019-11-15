@@ -68,8 +68,8 @@ namespace FluxControlAPI.Controllers
 
         }
 
-        [HttpPatch]
-        [Route("Change/")]
+        [HttpPut]
+        [Route("Change")]
         public ActionResult Change([FromBody] Company company)
         {
 

@@ -176,9 +176,11 @@ namespace FluxControlAPI.Controllers
         {
             try
             {
+                User existingUser = null;
+
                 using (var userDAO = new UserDAO())
                 {
-                    var existingUser = userDAO.GetByEmail(user.Email);
+                    existingUser = userDAO.GetByEmail(user.Email);
 
                     if (existingUser != null)
                         user.Id = existingUser.Id;
@@ -197,7 +199,9 @@ namespace FluxControlAPI.Controllers
                         using (var tokenDAO = new TokenDAO())
                             tokenDAO.Add(token);
 
-                        return StatusCode(201, new { Message = "Adicionado com sucesso" });
+                        return StatusCode(201, new {
+                            Message = (existingUser != null) ? "Usuário já cadastrado, email reenviado com sucesso" : "Adicionado com sucesso"
+                        });
                     }
                             
                     return StatusCode(424, new { Message = "Falha ao enviar email" });
@@ -245,8 +249,8 @@ namespace FluxControlAPI.Controllers
             
         }
 
-        [HttpPatch]
-        [Route("Change/")]
+        [HttpPut]
+        [Route("Change")]
         public ActionResult Change([FromBody] User user)
         {
             try

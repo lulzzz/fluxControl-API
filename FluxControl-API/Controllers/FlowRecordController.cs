@@ -30,7 +30,7 @@ namespace FluxControlAPI.Controllers
         }
 
         [HttpPost]
-        [Route("ProcessImageBytes/")]
+        [Route("ProcessImageBytes")]
         public ActionResult ProcessImageBytes()
         {
             try
@@ -52,17 +52,26 @@ namespace FluxControlAPI.Controllers
 
                         var response = JsonConvert.DeserializeObject<OpenALPRResponse>(recognizeTask.Result);
 
-                        if (!response.error_code.Equals("400"))
-                            response.error = "kk";
+                        if (!response.Error)
+                        {
+                            using (var recordFlowDAO = new FlowRecordDAO())
+                                recordFlowDAO.Register(response.Results[0].Plate, null);
 
-                        using (var recordFlowDAO = new FlowRecordDAO())
-                            recordFlowDAO.Register("XUMBADO ATENÇÃO", null);
+                            // SystemNotifier.SendNotificationAsync(response);
 
-                        // SystemNotifier.SendNotificationAsync(response);
+                            return StatusCode(200);
+                        }
+                        
+                        else
+                        {
+                            // TODO: Alert an Operator
+
+                            return StatusCode(404);
+                        }
                             
                     }
 
-                    return StatusCode(200);
+                    
                 }
 
                 return StatusCode(406);
@@ -76,7 +85,7 @@ namespace FluxControlAPI.Controllers
         }
 
         [HttpPost]
-        [Route("Record/")]
+        [Route("Record")]
         public ActionResult Record([FromBody] int busNumber)
         {
             try

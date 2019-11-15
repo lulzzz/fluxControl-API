@@ -75,9 +75,9 @@ namespace FluxControlAPI.Controllers
 
         }
 
-        [HttpPatch]
+        [HttpPut]
         [Authorize(Roles = "Manager, Administrator")]
-        [Route("Change/")]
+        [Route("Change")]
         public ActionResult Change([FromBody] Bus bus)
         {
 

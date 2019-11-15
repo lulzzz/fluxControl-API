@@ -83,14 +83,15 @@ namespace FluxControlAPI.Models.Datas
             var cmd = new SqlCommand();
 
             cmd.Connection = connection;
-            cmd.CommandText = @"INSERT INTO Users (Name, Registration, Email, Type) 
-                                VALUES (@Name, @Registration, @Email, @Type)
+            cmd.CommandText = @"INSERT INTO Users (Name, Registration, Email, Type, CreationDate) 
+                                VALUES (@Name, @Registration, @Email, @Type, @CreationDate)
                                 SELECT CAST(@@IDENTITY AS INT)";
 
             cmd.Parameters.AddWithValue("@Name", model.Name);
             cmd.Parameters.AddWithValue("@Registration", model.Registration);
             cmd.Parameters.AddWithValue("@Email", model.Email);
             cmd.Parameters.AddWithValue("@Type", model.Type);
+            cmd.Parameters.AddWithValue("@CreationDate", DateTime.Now);
 
             using (var reader = cmd.ExecuteReader())
                 if (reader.Read())
@@ -136,7 +137,8 @@ namespace FluxControlAPI.Models.Datas
                         Name = (string) reader["Name"],
                         Registration = (int) reader["Registration"],
                         Email = (string) reader["Email"],
-                        Type = (UserType)(short) reader["Type"]
+                        Type = (UserType)(short) reader["Type"],
+                        CreationDate = (DateTime)reader["CreationDate"]
                     };
 
             return model;
@@ -160,7 +162,8 @@ namespace FluxControlAPI.Models.Datas
                             Name = (string)reader["Name"],
                             Registration = (int)reader["Registration"],
                             Email = (string)reader["Email"],
-                            Type = (UserType)(short) reader["Type"]
+                            Type = (UserType)(short) reader["Type"],
+                            CreationDate = (DateTime)reader["CreationDate"]
                         }
                     );
 
