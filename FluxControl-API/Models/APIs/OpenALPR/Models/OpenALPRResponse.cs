@@ -5,9 +5,17 @@ using System.Threading.Tasks;
 
 namespace FluxControlAPI.Models.APIs.OpenALPR.Models
 {
+    public class OpenALPRResult
+    {
+        public string Plate { get; set; }
+        public double Confidence { get; set; }
+    }
+
     public class OpenALPRResponse
     {
-        public string error_code { get; set; }
-        public string error { get; set; }
+
+        public bool Error { get; set; }
+        public OpenALPRResult[] Results { get; set; }
+
     }
 }
