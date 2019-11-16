@@ -134,12 +134,13 @@ namespace FluxControlAPI.Models.Datas
 
             cmd.Connection = connection;
             cmd.CommandText = @"SELECT record.*, 
-                                user.Id User_Id, user.Registration, user.Email, user.Name, user.Password, user.Type
-                                bus.Id Bus_Id, bus.Number, bus.LicensePlate, bus.Company_Id, 
+                                _user.Id User_Id, _user.Registration, _user.Email, _user.Name, _user.Password, _user.Type,
+                                bus.Id Bus_Id, bus.Number, bus.LicensePlate, bus.Company_Id
                                 FROM FlowRecords record
                                 JOIN Buses bus ON record.Bus_Id = bus.Id
-                                JOIN Users user ON record.User_Id = user.Id
-                                WHERE Departure >= @StartInterval AND Departure <= @EndInterval AND Departure IS NOT NULL 
+                                JOIN Users _user ON record.User_Id = _user.Id
+                                WHERE Departure BETWEEN @StartInterval AND @EndInterval 
+                                AND Departure IS NOT NULL 
                                 AND bus.Company_Id = @CompanyId";
 
             cmd.Parameters.AddWithValue("@CompanyId", companyId);
@@ -174,17 +175,17 @@ namespace FluxControlAPI.Models.Datas
             return models;
         }
 
-        public bool MarkCharge(int recordId, int companyId)
+        public bool MarkCharge(int recordId, int invoiceId)
         {
             SqlCommand cmd = new SqlCommand();
 
             cmd.Connection = connection;
             cmd.CommandText = @"UPDATE FlowRecords 
-                                SET Company_Id = @CompanyId
+                                SET Invoice_Id = @InvoiceId
                                 WHERE Id = @Id";
 
             cmd.Parameters.AddWithValue("@Id", recordId);
-            cmd.Parameters.AddWithValue("@CompanyId", companyId);
+            cmd.Parameters.AddWithValue("@InvoiceId", invoiceId);
 
             return cmd.ExecuteNonQuery() > 0;
         }
@@ -234,12 +235,12 @@ namespace FluxControlAPI.Models.Datas
             
             cmd.Connection = connection;
             cmd.CommandText = @"SELECT record.*, 
-                                user.Id User_Id, user.Registration, user.Email, user.Name, user.Password, user.Type
-                                bus.Id Bus_Id, bus.Number, bus.LicensePlate, bus.Company_Id, 
+                                _user.Id User_Id, _user.Registration, _user.Email, _user.Name, _user.Password, _user.Type,
+                                bus.Id Bus_Id, bus.Number, bus.LicensePlate, bus.Company_Id
                                 FROM FlowRecords record
                                 JOIN Buses bus ON record.Bus_Id = bus.Id
-                                JOIN Users user ON record.User_Id = user.Id
-                                WHERE Id = @Id";
+                                JOIN Users _user ON record.User_Id = _user.Id
+                                WHERE record.Id = @Id";
 
             cmd.Parameters.AddWithValue("@Id", id);
 

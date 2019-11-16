@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FluxControlAPI.Controllers
 {
     [ApiController]
-    [Authorize("Bearer", Roles = "Administrator")]
+    // [Authorize("Bearer", Roles = "Administrator")]
     [Route("API/[controller]")]
     public class InvoiceController : ControllerBase
     {
@@ -36,55 +36,91 @@ namespace FluxControlAPI.Controllers
 
                 List<FlowRecord> records;
 
-                using (var flowRecordDAO = new FlowRecordDAO())
+                using (var invoiceDAO = new InvoiceDAO())
                 {
-                    decimal total = 0;
-                    records = flowRecordDAO.ListCompanyRecords(company.Id, begin, begin.AddDays(company.InvoiceInterval));
-
-                    Parallel.ForEach(records, (record) =>
+                    var invoice = new Invoice()
                     {
-                        if (flowRecordDAO.MarkCharge(record.Id, company.Id))
-                        {
-                            // Calcula o valor para o período de permanência desse Ônibus com base no intervalo de cobrança e o valor da tarifa
-                            var permanence = record.Arrival - record.Departure;
-                            total += rules.Tax * (Math.Ceiling(Convert.ToDecimal(permanence.Value.TotalMinutes) / rules.IntervalMinutes));
+                        GenerationDate = DateTime.Now,
+                        CompanyDebtor = company.Id,
+                        TaxConsidered = rules.Tax,
+                        IntervalMinutesConsidered = rules.IntervalMinutes
+                    };
 
-                            // Caso não tenha permanecido menos que o intervalo de cobrança, é cobrado a taxa mínima
-                            if (total == 0)
-                                total += rules.Tax;
-                        }
-                    });
+                    invoice.Id = invoiceDAO.Add(invoice);
 
-                    using (var invoiceDAO = new InvoiceDAO())
+                    if (invoice.Id != 0)
                     {
-                        var invoice = new Invoice()
+                        using (var flowRecordDAO = new FlowRecordDAO())
                         {
-                            GenerationDate = DateTime.Now,
-                            CompanyDebtor = company.Id,
-                            TaxConsidered = rules.Tax,
-                            IntervalMinutesConsidered = rules.IntervalMinutes,
-                            TotalCost = total
-                        };
+                            decimal total = 0;
+                            records = flowRecordDAO.ListCompanyRecords(company.Id, begin, begin.AddDays(company.InvoiceInterval));
 
-                        var invoiceId = invoiceDAO.Add(invoice);
+                            Parallel.ForEach(records, (record) =>
+                            {
+                                if (flowRecordDAO.MarkCharge(record.Id, invoice.Id))
+                                {
+                                    // Calcula o valor para o período de permanência desse Ônibus com base no intervalo de cobrança e o valor da tarifa
+                                    var permanence = record.Departure - record.Arrival;
+                                    total += rules.Tax * (Math.Ceiling(Convert.ToDecimal(permanence.Value.TotalMinutes) / rules.IntervalMinutes));
 
-                        if (invoiceId != 0)
-                        {
-                            invoice.Id = invoiceId;
-                            return StatusCode(200, invoice);
+                                    // Caso tenha permanecido menos que o intervalo de cobrança, é cobrado a taxa mínima
+                                    if (total <= 0)
+                                        total += rules.Tax;
+                                }
+                            });
+
+                            if (invoiceDAO.SetInvoiceValue(invoice.Id, total))
+                            {
+                                invoice.TotalCost = total;
+                                return StatusCode(200, invoice);
+                            }
+
+                            return StatusCode(304, new { Message = "Falha ao faturar" });
                         }
-
                     }
 
+                    return StatusCode(304, new { Message = "A fatura não foi gerada" });
                 }
-
-                return StatusCode(304);
             }
             
             catch (Exception ex)
             {
                 return StatusCode(500, new { Message = "Erro interno ao gerar fatura" });
             }
+        }
+
+        [HttpGet]
+        [Route("ChargedRecord/{recordId}")]
+        public ActionResult ChargedRecord(int recordId)
+        {
+            Rules rules;
+            FlowRecord record;
+
+            using (var providerDAO = new RulesDAO())
+                rules = providerDAO.Get();
+
+            using (var flowRecordDAO = new FlowRecordDAO())
+                record = flowRecordDAO.Get(recordId);
+
+            if (record.Departure != null)
+            {
+                var permanence = record.Departure - record.Arrival;
+
+                var total = rules.Tax * (Math.Ceiling(Convert.ToDecimal(permanence.Value.TotalMinutes) / rules.IntervalMinutes));
+
+                return StatusCode(200, new Invoice()
+                {
+                    Id = 0,
+                    GenerationDate = DateTime.Now,
+                    TaxConsidered = rules.Tax,
+                    IntervalMinutesConsidered = rules.IntervalMinutes,
+                    CompanyDebtor = record.BusRegistered.BusCompany,
+                    TotalCost = total
+                });
+            }
+
+            return StatusCode(412, new { Message = "O registro deve estar fechado para ser tarifado." });
+            
         }
     }
 }
