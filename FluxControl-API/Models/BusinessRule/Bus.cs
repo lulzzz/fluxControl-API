@@ -12,5 +12,6 @@ namespace FluxControlAPI.Models.BusinessRule
         public int Number { get; set; }
         public int BusCompany { get; set; }
         public string LicensePlate { get; set; }
+        public DateTime CreationDate { get; set; }
     }
 }

@@ -76,6 +76,7 @@ namespace FluxControlAPI.Models.Datas
                         Id = (int)dataTable.Rows[i]["Bus_Id"],
                         Number = (int)dataTable.Rows[i]["Number"],
                         LicensePlate = (string)dataTable.Rows[i]["LicensePlate"],
+                        CreationDate = (DateTime)reader["CreationDate"],
                         BusCompany = (int)dataTable.Rows[i]["Company_Id"]
 
                     });
@@ -91,6 +92,7 @@ namespace FluxControlAPI.Models.Datas
                             Name = (string)dataTable.Rows[i]["Name"],
                             Thumbnail = (string)dataTable.Rows[i]["Thumbnail"],
                             InvoiceInterval = (short)dataTable.Rows[i]["Invoice_Interval"],
+                            CreationDate = (DateTime)reader["CreationDate"],
                             Fleet = fleet
                         };
 
@@ -130,7 +132,8 @@ namespace FluxControlAPI.Models.Datas
                         Id = (int)dataTable.Rows[i]["Bus_Id"],
                         Number = (int)dataTable.Rows[i]["Number"],
                         LicensePlate = (string)dataTable.Rows[i]["LicensePlate"],
-                        BusCompany = (int)dataTable.Rows[i]["Company_Id"]
+                        BusCompany = (int)dataTable.Rows[i]["Company_Id"],
+                        CreationDate = (DateTime)reader["CreationDate"]
                     });
 
                     if (i != dataTable.Rows.Count - 1 && (int)dataTable.Rows[i]["Id"] == (int)dataTable.Rows[i + 1]["Id"])
@@ -145,6 +148,7 @@ namespace FluxControlAPI.Models.Datas
                             Name = (string)dataTable.Rows[i]["Name"],
                             Thumbnail = (string)dataTable.Rows[i]["Thumbnail"],
                             InvoiceInterval = (short)dataTable.Rows[i]["Invoice_Interval"],
+                            CreationDate = (DateTime)reader["CreationDate"],
                             Fleet = fleet
                         });
 

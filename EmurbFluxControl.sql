@@ -10,6 +10,7 @@ CREATE TABLE Companies
 	Name				VARCHAR(60)		NOT NULL,
 	Thumbnail			VARCHAR(MAX)	NOT NULL,
 	Invoice_Interval	SMALLINT		NOT NULL	DEFAULT 30,
+	CreationDate		DATE			NOT NULL,
 	Inactive			BIT							DEFAULT 0	
 );
 GO
@@ -19,6 +20,7 @@ CREATE TABLE Buses
 	Id				INT				NOT NULL	IDENTITY PRIMARY KEY,
 	Number			INT				NOT NULL,
 	LicensePlate	VARCHAR(10)		NOT NULL,
+	CreationDate	DATE			NOT NULL,
 	Inactive		BIT							DEFAULT 0,
 
 	Company_Id		INT				NOT NULL	REFERENCES Companies
@@ -81,7 +83,7 @@ CREATE TABLE Invoices
 	TaxConsidered		MONEY		NOT NULL,
 	IntervalConsidered	DATETIME	NOT NULL,
 	Total				MONEY		NOT NULL,
-	Inactive			BIT						DEFAULT 0
+	Inactive			BIT						DEFAULT 0,
 
 	Company_Id			INT				NOT	NULL			REFERENCES Companies
 );

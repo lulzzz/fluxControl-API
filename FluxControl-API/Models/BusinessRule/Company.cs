@@ -13,5 +13,6 @@ namespace FluxControlAPI.Models.Datas.BusinessRule
         public string Thumbnail { get; set; }
         public short InvoiceInterval { get; set; }
         public List<Bus> Fleet { get; set; }
+        public DateTime CreationDate { get; set; }
     }
 }
