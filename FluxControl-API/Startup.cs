@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using FluxControlAPI.Models.Security;
 using FluxControlAPI.Models.Datas;
 using Microsoft.Extensions.Options;
+using FluxControlAPI.Hubs;
 
 namespace FluxControlAPI
 {
@@ -77,12 +78,14 @@ namespace FluxControlAPI
                 options.AddPolicy("AllowAllOrigins", policyBuilder =>
                 {
                     policyBuilder
-                    .AllowAnyOrigin()
+                    .WithOrigins("http://localhost:5000")
                     .AllowAnyMethod()
-                    .AllowAnyHeader();
+                    .AllowAnyHeader()
+                    .AllowCredentials();
                 });
             });
 
+            services.AddSignalR();
             services.AddMvc();
         }
 
@@ -95,6 +98,12 @@ namespace FluxControlAPI
 
             app.UseAuthentication();
             app.UseCors("AllowAllOrigins");
+
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<HistoricHub>("/API/Historic");
+            });
+
             app.UseMvc();
         }
     }
