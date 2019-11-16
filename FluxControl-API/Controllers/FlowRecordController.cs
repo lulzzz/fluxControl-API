@@ -113,10 +113,15 @@ namespace FluxControlAPI.Controllers
                         record = FlowRecordDAO.Register(busNumber.ToString(), user);
 
                     if (record != null)
+                    {
+                        SystemNotifier.VehicleActionAsync(record);
                         return StatusCode(202, new { Message = "Registrado com sucesso" });
-
+                    }
                     else
+                    {
                         return StatusCode(304, new { Message = "Não foi possível efetuar o registro" });
+                    }
+                        
                 }
 
                 return StatusCode(404, new { Message = "Usuário não encontrado" });
