@@ -78,14 +78,14 @@ GO
 
 CREATE TABLE Invoices
 (
-	Id					INT			NOT NULL	IDENTITY	PRIMARY KEY,
-	GenerationDate		DATETIME	NOT NULL,
-	TaxConsidered		MONEY		NOT NULL,
-	IntervalConsidered	DATETIME	NOT NULL,
-	Total				MONEY		NOT NULL,
-	Inactive			BIT						DEFAULT 0,
+	Id							INT			NOT NULL	IDENTITY	PRIMARY KEY,
+	GenerationDate				DATETIME	NOT NULL,
+	TaxConsidered				MONEY		NOT NULL,
+	IntervalMinutesConsidered	INT			NOT NULL,
+	Total						MONEY		NOT NULL,
+	Inactive					BIT						DEFAULT 0,
 
-	Company_Id			INT				NOT	NULL			REFERENCES Companies
+	Company_Id					INT			NOT	NULL			REFERENCES Companies
 );
 GO
 

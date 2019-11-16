@@ -9,6 +9,20 @@ namespace FluxControlAPI.Models.Datas
 {
     public class InvoiceDAO : Database, ICrudDAO<Invoice>
     {
+        public bool SetInvoiceValue(int invoiceId, decimal totalCost)
+        {
+            SqlCommand cmd = new SqlCommand();
+
+            cmd.Connection = connection;
+            cmd.CommandText = @"UPDATE Invoices 
+                                SET Total = @Total
+                                WHERE Id = @Id";
+
+            cmd.Parameters.AddWithValue("@Id", invoiceId);
+            cmd.Parameters.AddWithValue("@Total", totalCost);
+
+            return cmd.ExecuteNonQuery() > 0;
+        }
 
         #region CRUD
 
