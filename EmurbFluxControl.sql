@@ -47,9 +47,9 @@ GO
 
 CREATE TABLE ProviderRules
 (
-	Id				INT			NOT NULL	IDENTITY	PRIMARY KEY,
-	Tax				MONEY		NOT NULL,
-	Interval		DATETIME	NOT NULL
+	Id					INT			NOT NULL	IDENTITY	PRIMARY KEY,
+	Tax					MONEY		NOT NULL,
+	IntervalMinutes		INT			NOT NULL
 );
 GO
 

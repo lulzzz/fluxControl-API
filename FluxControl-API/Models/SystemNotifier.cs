@@ -6,22 +6,22 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluxControlAPI.Models.SystemModels;
 using FluxControlAPI.Models.BusinessRule;
+using Microsoft.AspNetCore.SignalR;
 
 namespace FluxControlAPI.Models
 {
-    public static class SystemNotifier
+    public class SystemNotifier
     {
-        private static IHubContext<HistoricHub> _hub;
+        private IHubContext<HistoricHub> _hub;
         
-        public static void Init(IHubContext<HistoricHub> hub)
+        public SystemNotifier(IHubContext<HistoricHub> hub)
         {
-            if (_hub == null)
-                _hub = hub;
+            this._hub = hub;
         }
 
-        public static Task NotifyBysArrivedAsync(Bus bus)
+        public void VehicleActionAsync(FlowRecord record)
         {
-            return _hub.Clients.All.SendAsync("VehicleArrived", bus);
+            _hub.Clients.All.SendAsync("VehicleAction", record);
         }
     }
 }

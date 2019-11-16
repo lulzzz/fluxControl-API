@@ -9,6 +9,6 @@ namespace FluxControlAPI.Models.BusinessRule
     {
         public int Id { get; set; }
         public decimal Tax { get; set; }
-        public TimeSpan Interval { get; set; }
+        public int IntervalMinutes { get; set; }
     }
 }

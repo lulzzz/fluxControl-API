@@ -17,7 +17,7 @@ namespace FluxControlAPI.Models.Datas
         /// <param name="identifier">Placa ou Número do Ônibus</param>
         /// <param name="user">Usuário que está efetuando o registro</param>
         /// <returns>Retorna o Id do registro cadastrado no banco, ou zero caso não for registrado.</returns>
-        public int Register(string identifier, User user)
+        public FlowRecord Register(string identifier, User user)
         {
             Bus busRegistered = null;
 
@@ -38,20 +38,22 @@ namespace FluxControlAPI.Models.Datas
                     if (recordedFlow != null)
                     {
                         recordedFlow.Departure = DateTime.Now;
-                        this.RegisterDeparture(recordedFlow);
 
-                        return recordedFlow.Id;
+                        if (this.RegisterDeparture(recordedFlow))
+                            return recordedFlow;
                     }
 
                     else
                     {
                         register.Arrival = DateTime.Now;
-                        return this.Add(register);
+
+                        if (this.Add(register) != 0)
+                            return register;
                     }
                 }
             }
                 
-            return 0;
+            return null;
         }
 
         /// <summary>

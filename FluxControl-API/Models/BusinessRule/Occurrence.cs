@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace FluxControlAPI.Models.BusinessRule
 {
-    public class Occurence
+    public class Occurrence
     {
         public int Id { get; set; }
         public string Justification { get; set; }

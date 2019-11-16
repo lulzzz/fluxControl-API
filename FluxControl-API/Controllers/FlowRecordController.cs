@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using FluxControlAPI.Hubs;
 using FluxControlAPI.Models;
 using FluxControlAPI.Models.APIs.OpenALPR;
 using FluxControlAPI.Models.APIs.OpenALPR.Models;
+using FluxControlAPI.Models.BusinessRule;
 using FluxControlAPI.Models.Datas;
 using FluxControlAPI.Models.Datas.BusinessRule;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 
@@ -22,10 +25,12 @@ namespace FluxControlAPI.Controllers
     [Route("API/[controller]")]
     public class FlowRecordController : ControllerBase
     {
+        private SystemNotifier SystemNotifier { get; set; }
         private string _secretKey { get; set; }
 
-        public FlowRecordController(IConfiguration configuration)
+        public FlowRecordController(IHubContext<HistoricHub> hub, IConfiguration configuration)
         {
+            this.SystemNotifier = new SystemNotifier(hub);
             this._secretKey = configuration.GetSection("Secrets:OpenALPR:secretKey").Get<string>();
         }
 
@@ -54,24 +59,29 @@ namespace FluxControlAPI.Controllers
 
                         if (!response.Error)
                         {
+                            FlowRecord record = null;
+
                             using (var recordFlowDAO = new FlowRecordDAO())
-                                recordFlowDAO.Register(response.Results[0].Plate, null);
+                                record = recordFlowDAO.Register(response.Results[0].Plate, null);
 
-                            // SystemNotifier.SendNotificationAsync(response);
+                            if (record != null)
+                            {
+                                SystemNotifier.VehicleActionAsync(record);
 
-                            return StatusCode(200);
+                                return StatusCode(200);
+                            }
+
+                            else
+                            {
+                                // TODO: Alert an Operator
+
+                                return StatusCode(404);
+                            }
+
                         }
                         
-                        else
-                        {
-                            // TODO: Alert an Operator
-
-                            return StatusCode(404);
-                        }
-                            
                     }
 
-                    
                 }
 
                 return StatusCode(406);
@@ -97,12 +107,12 @@ namespace FluxControlAPI.Controllers
 
                 if (user != null)
                 {
-                    int recordId = 0;
+                    FlowRecord record;
 
                     using (var FlowRecordDAO = new FlowRecordDAO())
-                        recordId = FlowRecordDAO.Register(busNumber.ToString(), user);
+                        record = FlowRecordDAO.Register(busNumber.ToString(), user);
 
-                    if (recordId != 0)
+                    if (record != null)
                         return StatusCode(202, new { Message = "Registrado com sucesso" });
 
                     else

@@ -23,7 +23,7 @@ namespace FluxControlAPI.Models.Datas
 
             cmd.Parameters.AddWithValue("@GenerationDate", model.GenerationDate);
             cmd.Parameters.AddWithValue("@TaxConsidered", model.TaxConsidered);
-            cmd.Parameters.AddWithValue("@IntervalConsidered", model.IntervalConsidered);
+            cmd.Parameters.AddWithValue("@IntervalConsidered", model.IntervalMinutesConsidered);
             cmd.Parameters.AddWithValue("@Total", model.TotalCost);
             cmd.Parameters.AddWithValue("@CompanyId", model.CompanyDebtor);
 
@@ -47,7 +47,7 @@ namespace FluxControlAPI.Models.Datas
             cmd.Parameters.AddWithValue("@Id", model.Id);
             cmd.Parameters.AddWithValue("@GenerationDate", model.GenerationDate);
             cmd.Parameters.AddWithValue("@TaxConsidered", model.TaxConsidered);
-            cmd.Parameters.AddWithValue("@IntervalConsidered", model.IntervalConsidered);
+            cmd.Parameters.AddWithValue("@IntervalConsidered", model.IntervalMinutesConsidered);
             cmd.Parameters.AddWithValue("@Total", model.TotalCost);
             cmd.Parameters.AddWithValue("@CompanyId", model.CompanyDebtor);
             return cmd.ExecuteNonQuery() > 0;
@@ -69,7 +69,7 @@ namespace FluxControlAPI.Models.Datas
                 {
                     Id = (int)reader["Id"],
                     GenerationDate = (DateTime)reader["GenerationDate"],
-                    IntervalConsidered = (TimeSpan)reader["IntervalConsidered"],
+                    IntervalMinutesConsidered = (int)reader["IntervalConsidered"],
                     TaxConsidered = (decimal)reader["TaxConsidered"],
                     CompanyDebtor = (int)reader["Company_Id"],
                     TotalCost = (decimal)reader["Total"]
@@ -96,7 +96,7 @@ namespace FluxControlAPI.Models.Datas
                     {
                         Id = (int)reader["Id"],
                         GenerationDate = (DateTime)reader["GenerationDate"],
-                        IntervalConsidered = (TimeSpan)reader["IntervalConsidered"],
+                        IntervalMinutesConsidered = (int)reader["IntervalConsidered"],
                         TaxConsidered = (decimal)reader["TaxConsidered"],
                         CompanyDebtor = (int)reader["Company_Id"],
                         TotalCost = (decimal)reader["Total"]

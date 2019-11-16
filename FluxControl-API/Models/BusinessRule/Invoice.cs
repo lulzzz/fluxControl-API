@@ -11,7 +11,7 @@ namespace FluxControlAPI.Models.BusinessRule
         public int Id { get; set; }
         public DateTime GenerationDate { get; set; }
         public decimal TaxConsidered { get; set; }
-        public TimeSpan IntervalConsidered { get; set; }
+        public int IntervalMinutesConsidered { get; set; }
         public int CompanyDebtor { get; set; }
         public decimal TotalCost { get; set; }
     }
