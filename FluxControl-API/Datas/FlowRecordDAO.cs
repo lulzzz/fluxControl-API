@@ -46,8 +46,9 @@ namespace FluxControlAPI.Models.Datas
                     else
                     {
                         register.Arrival = DateTime.Now;
+                        register.Id = this.Add(register);
 
-                        if (this.Add(register) != 0)
+                        if (register.Id != 0)
                             return register;
                     }
                 }
