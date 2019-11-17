@@ -12,7 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace FluxControlAPI.Controllers
 {
     [ApiController]
-    // [Authorize("Bearer", Roles = "Administrator")]
+    [Authorize("Bearer", Roles = "Administrator")]
     [Route("API/[controller]")]
     public class InvoiceController : ControllerBase
     {
@@ -90,8 +90,8 @@ namespace FluxControlAPI.Controllers
         }
 
         [HttpGet]
-        [Route("ChargedRecord/{recordId}")]
-        public ActionResult ChargedRecord(int recordId)
+        [Route("ChargeRegistration/{recordId}")]
+        public ActionResult ChargeRegistration(int recordId)
         {
             Rules rules;
             FlowRecord record;
