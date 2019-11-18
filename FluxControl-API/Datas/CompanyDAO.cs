@@ -165,8 +165,8 @@ namespace FluxControlAPI.Models.Datas
             var cmd = new SqlCommand();
 
             cmd.Connection = connection;
-            cmd.CommandText = @"DELETE FROM Buses WHERE Company_Id = @Id
-                                DELETE FROM Companies WHERE Id = @Id";
+            cmd.CommandText = @"UPDATE Buses SET Inactive = 1 WHERE Company_Id = @Id
+                                UPDATE Companies SET Inactive = 1 WHERE Id = @Id";
 
             cmd.Parameters.AddWithValue("@Id", id);
 

@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using FluxControlAPI.Models.BusinessRule;
 using Microsoft.AspNetCore.SignalR;
+using FluxControlAPI.Models.SystemModels.Broadcast.Models;
 
 namespace FluxControlAPI.Models.SystemModels.Broadcast
 {
@@ -23,9 +24,9 @@ namespace FluxControlAPI.Models.SystemModels.Broadcast
             _hub.Clients.All.SendAsync("VehicleAction", record);
         }
 
-        public void InfoAsync(string message)
+        public void WarningAsync(SystemWarning warning)
         {
-            _hub.Clients.All.SendAsync("Info", message);
+            _hub.Clients.All.SendAsync("Warning", warning);
         }
     }
 }

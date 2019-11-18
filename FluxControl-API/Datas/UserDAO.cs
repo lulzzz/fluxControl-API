@@ -176,7 +176,9 @@ namespace FluxControlAPI.Models.Datas
 
             cmd.Connection = connection;
             cmd.CommandText = @"DELETE FROM Tokens WHERE User_Id = @Id
-                                DELETE FROM Users WHERE Id = @Id";
+                                UPDATE Users 
+                                SET Inactive = 1
+                                WHERE Id = @Id";
 
             cmd.Parameters.AddWithValue("@Id", id);
 

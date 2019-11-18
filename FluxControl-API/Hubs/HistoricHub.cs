@@ -6,14 +6,15 @@ using Microsoft.AspNetCore.SignalR;
 using FluxControlAPI.Models;
 using FluxControlAPI.Models.BusinessRule;
 using Microsoft.AspNet.SignalR.Hubs;
+using FluxControlAPI.Models.SystemModels.Broadcast.Models;
 
 namespace FluxControlAPI.Hubs
 {
     public class HistoricHub : Hub
     {
-        public async Task Info(string message)
+        public async Task Warning(SystemWarning warning)
         {
-            await Clients.All.SendAsync("Info", message);
+            await Clients.All.SendAsync("Warning", warning);
         }
 
         public async Task VehicleAction(FlowRecord record)

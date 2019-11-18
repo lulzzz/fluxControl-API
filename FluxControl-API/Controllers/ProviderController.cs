@@ -47,7 +47,6 @@ namespace FluxControlAPI.Controllers
         {
             try
             {
-
                 using (var providerDAO = new RulesDAO())
                     if (providerDAO.Update(rules))
                         return StatusCode(200, new { Message = "Regras atualizadas" });

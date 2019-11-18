@@ -34,8 +34,6 @@ namespace FluxControlAPI.Controllers
                 if (rules == null)
                     return StatusCode(404, new { Message = "Não há regras base para o cálculo da fatura" });
 
-                List<FlowRecord> records;
-
                 using (var invoiceDAO = new InvoiceDAO())
                 {
                     var invoice = new Invoice()
@@ -52,30 +50,34 @@ namespace FluxControlAPI.Controllers
                     {
                         using (var flowRecordDAO = new FlowRecordDAO())
                         {
+                            List<FlowRecord> records;
                             decimal total = 0;
-                            records = flowRecordDAO.ListCompanyRecords(company.Id, begin, begin.AddDays(company.InvoiceInterval));
+
+                            flowRecordDAO.MarkCharge(invoice.Id, company.Id, begin, begin.AddDays(company.InvoiceInterval));
+                            records = invoiceDAO.GetInvoiceRecords(invoice.Id);
 
                             Parallel.ForEach(records, (record) =>
                             {
-                                if (flowRecordDAO.MarkCharge(record.Id, invoice.Id))
-                                {
-                                    // Calcula o valor para o período de permanência desse Ônibus com base no intervalo de cobrança e o valor da tarifa
-                                    var permanence = record.Departure - record.Arrival;
-                                    total += rules.Tax * (Math.Ceiling(Convert.ToDecimal(permanence.Value.TotalMinutes) / rules.IntervalMinutes));
+                                
+                                // Calcula o valor para o período de permanência desse Ônibus com base no intervalo de cobrança e o valor da tarifa
+                                var permanence = record.Departure - record.Arrival;
+                                total += rules.Tax * (Math.Ceiling(Convert.ToDecimal(permanence.Value.TotalMinutes / rules.IntervalMinutes)));
 
-                                    // Caso tenha permanecido menos que o intervalo de cobrança, é cobrado a taxa mínima
-                                    if (total <= 0)
-                                        total += rules.Tax;
-                                }
+                                // Caso tenha permanecido menos que o intervalo de cobrança, é cobrado a taxa mínima
+                                if (total <= 0)
+                                    total += rules.Tax;
+                                
                             });
 
+                            if (records.Count <= 0 && invoiceDAO.Cancel(invoice.Id))
+                                return StatusCode(304, new { Message = "Não há registros não faturados para este período" });
+                            
                             if (invoiceDAO.SetInvoiceValue(invoice.Id, total))
                             {
                                 invoice.TotalCost = total;
                                 return StatusCode(200, invoice);
                             }
 
-                            return StatusCode(304, new { Message = "Falha ao faturar" });
                         }
                     }
 
@@ -106,7 +108,7 @@ namespace FluxControlAPI.Controllers
             {
                 var permanence = record.Departure - record.Arrival;
 
-                var total = rules.Tax * (Math.Ceiling(Convert.ToDecimal(permanence.Value.TotalMinutes) / rules.IntervalMinutes));
+                var total = rules.Tax * (Math.Ceiling(Convert.ToDecimal(permanence.Value.TotalMinutes / rules.IntervalMinutes)));
 
                 return StatusCode(200, new Invoice()
                 {

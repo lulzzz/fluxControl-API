@@ -10,6 +10,8 @@ using FluxControlAPI.Models.APIs.OpenALPR.Models;
 using FluxControlAPI.Models.BusinessRule;
 using FluxControlAPI.Models.Datas;
 using FluxControlAPI.Models.Datas.BusinessRule;
+using FluxControlAPI.Models.SystemModels.Broadcast;
+using FluxControlAPI.Models.SystemModels.Broadcast.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -67,13 +69,18 @@ namespace FluxControlAPI.Controllers
                             if (record != null)
                             {
                                 SystemNotifier.VehicleActionAsync(record);
-
                                 return StatusCode(200);
                             }
 
                             else
                             {
-                                // TODO: Alert an Operator
+                                SystemNotifier.WarningAsync(new SystemWarning()
+                                {
+                                    Moment = DateTime.Now,
+                                    Type = SystemWarning.WarningType.NotRegistered,
+                                    LicensePlate = response.Results[0].Plate,
+                                    Message = "A placa não foi reconhecida para nenhuma empresa no banco de dados"
+                                });
 
                                 return StatusCode(404);
                             }
@@ -83,6 +90,13 @@ namespace FluxControlAPI.Controllers
                     }
 
                 }
+
+                SystemNotifier.WarningAsync(new SystemWarning()
+                {
+                    Moment = DateTime.Now,
+                    Type = SystemWarning.WarningType.NotRecognized,
+                    Message = "Falha ao identificar a placa"
+                });
 
                 return StatusCode(406);
             }
@@ -119,6 +133,14 @@ namespace FluxControlAPI.Controllers
                     }
                     else
                     {
+                        SystemNotifier.WarningAsync(new SystemWarning()
+                        {
+                            Moment = DateTime.Now,
+                            Type = SystemWarning.WarningType.NotRegistered,
+                            LicensePlate = busNumber.ToString(),
+                            Message = "A placa não foi reconhecida para nenhuma empresa no banco de dados"
+                        });
+
                         return StatusCode(304, new { Message = "Não foi possível efetuar o registro" });
                     }
                         

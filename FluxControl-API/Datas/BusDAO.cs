@@ -145,7 +145,8 @@ namespace FluxControlAPI.Models.Datas
 
             cmd.Connection = connection;
 
-            cmd.CommandText = @"REMOVE FROM Buses
+            cmd.CommandText = @"UPDATE Buses 
+                                SET Inactive = 1
                                 WHERE Id = @Id";
 
 

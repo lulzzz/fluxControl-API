@@ -143,6 +143,7 @@ namespace FluxControlAPI.Models.Datas
                                 AND Departure IS NOT NULL 
                                 AND bus.Company_Id = @CompanyId";
 
+
             cmd.Parameters.AddWithValue("@CompanyId", companyId);
             cmd.Parameters.AddWithValue("@StartInterval", startInterval);
             cmd.Parameters.AddWithValue("@EndInterval", endInterval);
@@ -175,17 +176,24 @@ namespace FluxControlAPI.Models.Datas
             return models;
         }
 
-        public bool MarkCharge(int recordId, int invoiceId)
+        public bool MarkCharge(int invoiceId, int companyId, DateTime startInterval, DateTime endInterval)
         {
             SqlCommand cmd = new SqlCommand();
 
             cmd.Connection = connection;
-            cmd.CommandText = @"UPDATE FlowRecords 
+            cmd.CommandText = @"UPDATE FlowRecords
                                 SET Invoice_Id = @InvoiceId
-                                WHERE Id = @Id";
+                                FROM FlowRecords record
+                                JOIN Buses bus ON bus.Id = record.Bus_Id
+                                WHERE Departure BETWEEN @StartInterval AND @EndInterval 
+                                AND Departure IS NOT NULL 
+                                AND Invoice_Id IS NULL 
+                                AND bus.Company_Id = @CompanyId";
 
-            cmd.Parameters.AddWithValue("@Id", recordId);
             cmd.Parameters.AddWithValue("@InvoiceId", invoiceId);
+            cmd.Parameters.AddWithValue("@CompanyId", companyId);
+            cmd.Parameters.AddWithValue("@StartInterval", startInterval);
+            cmd.Parameters.AddWithValue("@EndInterval", endInterval);
 
             return cmd.ExecuteNonQuery() > 0;
         }
@@ -324,7 +332,8 @@ namespace FluxControlAPI.Models.Datas
             SqlCommand cmd = new SqlCommand();
 
             cmd.Connection = connection;
-            cmd.CommandText = @"DELETE FROM FlowRecords 
+            cmd.CommandText = @"UPDATE FlowRecords 
+                                SET Inactive = 1
                                 WHERE Id = @Id";
 
             cmd.Parameters.AddWithValue("@Id", id);
