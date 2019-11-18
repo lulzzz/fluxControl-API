@@ -61,7 +61,7 @@ namespace FluxControlAPI.Controllers
                                 
                                 // Calcula o valor para o período de permanência desse Ônibus com base no intervalo de cobrança e o valor da tarifa
                                 var permanence = record.Departure - record.Arrival;
-                                total += rules.Tax * Convert.ToDecimal(Math.Ceiling(Math.Floor(permanence.Value.TotalMinutes) / rules.IntervalMinutes));
+                                total += rules.Tax * Convert.ToDecimal(Math.Floor(permanence.Value.TotalMinutes / rules.IntervalMinutes));
 
                                 // Caso tenha permanecido menos que o intervalo de cobrança, é cobrado a taxa mínima
                                 if (total <= 0)
@@ -108,7 +108,7 @@ namespace FluxControlAPI.Controllers
             {
                 var permanence = record.Departure - record.Arrival;
 
-                var total = rules.Tax * Convert.ToDecimal(Math.Ceiling(Math.Floor(permanence.Value.TotalSeconds) / rules.IntervalMinutes));
+                var total = rules.Tax * Convert.ToDecimal(Math.Floor(permanence.Value.TotalSeconds / rules.IntervalMinutes));
 
                 // Caso tenha permanecido menos que o intervalo de cobrança, é cobrado a taxa mínima
                 if (total <= 0)
