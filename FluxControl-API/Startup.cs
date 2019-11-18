@@ -78,7 +78,7 @@ namespace FluxControlAPI
                 options.AddPolicy("AllowAllOrigins", policyBuilder =>
                 {
                     policyBuilder
-                    .WithOrigins("http://localhost:5000")
+                    .AllowAnyOrigin()
                     .AllowAnyMethod()
                     .AllowAnyHeader()
                     .AllowCredentials();
