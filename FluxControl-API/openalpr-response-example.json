@@ -1,0 +1,50 @@
+{
+    "uuid": "",
+    "data_type": "alpr_results", 
+    "epoch_time": 1573617734460, 
+    "processing_time": 
+    {
+        "plates": 64.53052520751953, 
+        "total": 75.36100000004353
+        }, 
+    "img_height": 1200, 
+    "img_width": 1600, 
+    "results": 
+    [
+        {
+            "plate": "FYR9915", 
+            "confidence": 93.57134246826172, 
+            "region_confidence": 0, 
+            "vehicle_region": {"y": 0, "x": 201, "height": 1199, "width": 1199}, 
+            "region": "", 
+            "plate_index": 0, 
+            "processing_time_ms": 18.804397583007812, 
+            "candidates": 
+                [
+                    {"matches_template": 1, "plate": "FYR9915", "confidence": 93.57134246826172}, 
+                    {"matches_template": 0, "plate": "FYR915", "confidence": 81.12007904052734}, 
+                    {"matches_template": 0, "plate": "FR9915", "confidence": 80.83815002441406}, 
+                    {"matches_template": 0, "plate": "FYR995", "confidence": 80.55226135253906}, 
+                    {"matches_template": 0, "plate": "FYR991", "confidence": 80.40645599365234}, 
+                    {"matches_template": 0, "plate": "FY9915", "confidence": 80.40609741210938}, 
+                    {"matches_template": 0, "plate": "YR9915", "confidence": 80.40570068359375}, 
+                    {"matches_template": 1, "plate": "FMR9915", "confidence": 80.2860107421875}, 
+                    {"matches_template": 1, "plate": "FYR9315", "confidence": 80.26886749267578}, 
+                    {"matches_template": 1, "plate": "FKR9915", "confidence": 80.26118469238281}
+                ], 
+            "coordinates": 
+            [
+                {"y": 472, "x": 781}, 
+                {"y": 201, "x": 1323}, 
+                {"y": 464, "x": 1380}, 
+                {"y": 768, "x": 833}
+            ], 
+            "matches_template": 1, 
+            "requested_topn": 10
+        }
+    ], 
+    "credits_monthly_used": 35, 
+    "version": 2, 
+    "credits_monthly_total": 1000, 
+    "error": false, 
+    "regions_of_interest": [{"y": 0, "x": 0, "height": 1200, "width": 1600}], "credit_cost": 1}
