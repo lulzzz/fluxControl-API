@@ -64,7 +64,7 @@ namespace FluxControlAPI.Controllers
                             FlowRecord record = null;
 
                             using (var recordFlowDAO = new FlowRecordDAO())
-                                record = recordFlowDAO.Register(response.Results[0].Plate, null);
+                                record = recordFlowDAO.Register(response.Results[0].Plate, new User() { Id = 0 }); // <- Chumbo
 
                             if (record != null)
                             {
