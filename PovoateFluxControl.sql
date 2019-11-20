@@ -40,14 +40,14 @@ VALUES (27331, 'LMN-1234', GETDATE(), NULL, 2)
 
 INSERT INTO Buses
 VALUES (27342, 'OPQ-1234', GETDATE(), NULL, 3)
-GO
-SELECT * FROM Buses;
-
+select * from Buses;
 INSERT INTO ProviderRules (IntervalMinutes, Tax) VALUES (1, 50);
-GO
 select * from ProviderRules;
 
-
+INSERT INTO FlowRecords (Arrival, Departure, Bus_Id, User_Id, Invoice_Id)
+VALUES (GETDATE(), NULL, 1, 1, NULL);
 select * from FlowRecords;
+
+INSERT INTO Invoices (
 
 select * from Invoices;

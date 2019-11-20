@@ -4,16 +4,6 @@
 #include "esp_camera.h"
 #include "Arduino.h"
 
-// CAM
-//#include "esp_timer.h"
-//#include "img_converters.h"
-//#include "fb_gfx.h"
-//#include "fd_forward.h"
-//#include "fr_forward.h"
-//#include "soc/soc.h"           // Disable brownour problems
-//#include "soc/rtc_cntl_reg.h"  // Disable brownour problems
-//#include "driver/rtc_io.h"
-
 // Pin definition for CAMERA_MODEL_AI_THINKER
 #define PWDN_GPIO_NUM     32
 #define RESET_GPIO_NUM    -1
