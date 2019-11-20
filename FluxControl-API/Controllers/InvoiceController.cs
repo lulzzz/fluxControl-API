@@ -28,6 +28,9 @@ namespace FluxControlAPI.Controllers
                 using (var companyDAO = new CompanyDAO())
                     company = companyDAO.Get(companyId);
 
+                if (company == null)
+                    return StatusCode(404, new { Message = "Empresa não encontrada" });
+
                 using (var providerDAO = new RulesDAO())
                     rules = providerDAO.Get();
 
@@ -101,8 +104,14 @@ namespace FluxControlAPI.Controllers
             using (var providerDAO = new RulesDAO())
                 rules = providerDAO.Get();
 
+            if (rules == null)
+                return StatusCode(404, new { Message = "Não há regras base para o cálculo da fatura" });
+
             using (var flowRecordDAO = new FlowRecordDAO())
                 record = flowRecordDAO.Get(recordId);
+
+            if (record == null)
+                return StatusCode(404, new { Message = "Registro não encontrado" });
 
             if (record.Departure != null)
             {

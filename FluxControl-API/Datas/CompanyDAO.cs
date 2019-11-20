@@ -74,7 +74,7 @@ namespace FluxControlAPI.Models.Datas
                     new Bus()
                     {
                         Id = (int)dataTable.Rows[i]["Bus_Id"],
-                        Number = (int)dataTable.Rows[i]["Number"],
+                        Number = (string)dataTable.Rows[i]["Number"],
                         LicensePlate = (string)dataTable.Rows[i]["LicensePlate"],
                         CreationDate = (DateTime)dataTable.Rows[i]["CreationDate"],
                         BusCompany = (int)dataTable.Rows[i]["Company_Id"]
@@ -130,7 +130,7 @@ namespace FluxControlAPI.Models.Datas
                     new Bus()
                     {
                         Id = (int)dataTable.Rows[i]["Bus_Id"],
-                        Number = (int)dataTable.Rows[i]["Number"],
+                        Number = (string)dataTable.Rows[i]["Number"],
                         LicensePlate = (string)dataTable.Rows[i]["LicensePlate"],
                         BusCompany = (int)dataTable.Rows[i]["Company_Id"],
                         CreationDate = (DateTime)dataTable.Rows[i]["CreationDate"]

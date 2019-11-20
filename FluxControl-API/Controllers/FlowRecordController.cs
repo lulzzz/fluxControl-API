@@ -59,7 +59,7 @@ namespace FluxControlAPI.Controllers
 
                         var response = JsonConvert.DeserializeObject<OpenALPRResponse>(recognizeTask.Result);
 
-                        if (!response.Error)
+                        if (!response.Error && response.Results.Length > 0)
                         {
                             FlowRecord record = null;
 

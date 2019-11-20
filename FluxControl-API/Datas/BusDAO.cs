@@ -32,7 +32,7 @@ namespace FluxControlAPI.Models.Datas
                     return new Bus()
                     {
                         Id = (int)reader["Id"],
-                        Number = (int)reader["Number"],
+                        Number = (string)reader["Number"],
                         LicensePlate = (string)reader["LicensePlate"],
                         BusCompany = (int)reader["Company_Id"],
                         CreationDate = (DateTime)reader["CreationDate"]
@@ -104,7 +104,7 @@ namespace FluxControlAPI.Models.Datas
                     return new Bus()
                     {
                         Id = (int)reader["Id"],
-                        Number = (int)reader["Number"],
+                        Number = (string)reader["Number"],
                         LicensePlate = (string)reader["LicensePlate"],
                         BusCompany = (int)reader["Company_Id"],
                         CreationDate = (DateTime)reader["CreationDate"]
@@ -129,7 +129,7 @@ namespace FluxControlAPI.Models.Datas
                     new Bus()
                     {
                         Id = (int)reader["Id"],
-                        Number = (int)reader["Number"],
+                        Number = (string)reader["Number"],
                         LicensePlate = (string)reader["LicensePlate"],
                         BusCompany = (int)reader["Company_Id"],
                         CreationDate = (DateTime)reader["CreationDate"]

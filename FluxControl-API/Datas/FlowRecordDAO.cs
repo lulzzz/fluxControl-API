@@ -98,7 +98,7 @@ namespace FluxControlAPI.Models.Datas
                         BusRegistered = new Bus()
                         {
                             Id = (int)reader["Bus_Id"],
-                            Number = (int)reader["Number"],
+                            Number = (string)reader["Number"],
                             LicensePlate = (string)reader["LicensePlate"],
                             BusCompany = (int)reader["Company_Id"]
                         },
@@ -165,7 +165,7 @@ namespace FluxControlAPI.Models.Datas
                         BusRegistered = new Bus()
                         {
                             Id = (int)reader["Bus_Id"],
-                            Number = (int)reader["Number"],
+                            Number = (string)reader["Number"],
                             LicensePlate = (string)reader["LicensePlate"],
                             BusCompany = (int)reader["Company_Id"]
                         },
@@ -270,7 +270,7 @@ namespace FluxControlAPI.Models.Datas
                     BusRegistered = new Bus()
                     {
                         Id = (int)reader["Bus_Id"],
-                        Number = (int)reader["Number"],
+                        Number = (string)reader["Number"],
                         LicensePlate = (string)reader["LicensePlate"],
                         BusCompany = (int)reader["Company_Id"]
                     },
@@ -315,7 +315,7 @@ namespace FluxControlAPI.Models.Datas
                         BusRegistered = new Bus()
                         {
                             Id = (int)reader["Bus_Id"],
-                            Number = (int)reader["Number"],
+                            Number = (string)reader["Number"],
                             LicensePlate = (string)reader["LicensePlate"],
                             BusCompany = (int)reader["Company_Id"]
                         },
