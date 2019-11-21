@@ -59,12 +59,12 @@ namespace FluxControlAPI.Controllers
 
                         var response = JsonConvert.DeserializeObject<OpenALPRResponse>(recognizeTask.Result);
 
-                        if (!response.Error)
+                        if (!response.Error && response.Results.Length > 0)
                         {
                             FlowRecord record = null;
 
                             using (var recordFlowDAO = new FlowRecordDAO())
-                                record = recordFlowDAO.Register(response.Results[0].Plate, new User() { Id = 0 }); // <- Chumbo
+                                record = recordFlowDAO.Register(response.Results[0].Plate, new User() { Id = 1 }); // <- Chumbo
 
                             if (record != null)
                             {

@@ -34,8 +34,8 @@
 #define PCLK_GPIO_NUM     22
 
 // WIFI
-const char* ssid = "Souza";
-const char* password =  "10041974";
+const char* ssid = "not-a-virus";
+const char* password =  "1234567890";
 
 const char* user_registration = "0";
 const char* user_password = "!system@emurb!";
@@ -44,12 +44,6 @@ String TOKEN = "";
 
 void setup() 
 {
-    pinMode(FLASH, OUTPUT);
-   
-    //WRITE_PERI_REG(RTC_CNTL_BROWN_OUT_REG, 0); //disable brownout detector
-  
-    Serial.begin(921600);
-
   // ---------------------------- CAM --------------------------------- //
     camera_config_t config;
     config.ledc_channel = LEDC_CHANNEL_0;
@@ -91,7 +85,7 @@ void setup()
   
     if (err != ESP_OK) 
     {
-      Serial.printf("Camera init failed with error 0x%x", err);
+      // Serial.printf("Camera init failed with error 0x%x", err);
       return;
     }
   
@@ -104,14 +98,16 @@ void setup()
     while (WiFi.status() != WL_CONNECTED) 
     { 
       delay(1000);
-      Serial.println("Connecting to WiFi..");
-    } Serial.println("Connected to the WiFi network");
+       Serial.println("Connecting to WiFi..");
+    } // Serial.println("Connected to the WiFi network");
     
     //TOKEN = makeLogin();
- 
+
+    pinMode(FLASH, OUTPUT);
+    Serial.begin(115200);
 }
 
-static esp_err_t take_send_photo()
+static int takePicture()
 {
     camera_fb_t *fb = NULL;
     esp_err_t res = ESP_OK;
@@ -123,7 +119,7 @@ static esp_err_t take_send_photo()
     
     if (!fb)
     {
-      Serial.println("Camera capture failed");
+      Serial.println("500");
       esp_camera_fb_return(fb);
       return ESP_FAIL;
     }
@@ -131,12 +127,12 @@ static esp_err_t take_send_photo()
     size_t fb_len = 0;
     if (fb->format != PIXFORMAT_JPEG)
     {
-      Serial.println("Non-JPEG data not implemented");
+      // Serial.println("Non-JPEG data not implemented");
       return ESP_FAIL;
     }
    
     esp_http_client_config_t config = {
-      .url = "http://192.168.0.14:8080/API/FlowRecord/ProcessImageBytes",
+      .url = "http://192.168.43.139:4444/API/FlowRecord/ProcessImageBytes",
     };
    
     esp_http_client_handle_t client = esp_http_client_init(&config);
@@ -144,23 +140,25 @@ static esp_err_t take_send_photo()
     esp_http_client_set_method(client, HTTP_METHOD_POST);
     esp_http_client_set_header(client, "Content-type", "application/octet-stream");
     esp_err_t err = esp_http_client_perform(client);
-    if (err == ESP_OK)
-      Serial.println("Frame uploaded");
-    else
-      Serial.printf("Failed to upload frame, error %d\r\n", err);
+    if (err != ESP_OK)
+      Serial.print("500");// Serial.printf("Failed to upload frame, error %d\r\n", err);
+
+    int statusCode = esp_http_client_get_status_code(client);
    
     esp_http_client_cleanup(client);
-   
     esp_camera_fb_return(fb);
+
+    return statusCode;
 }
  
 void loop() 
 {
-  //Check WiFi connection status
-  if(WiFi.status() == WL_CONNECTED)
-  {
-    take_send_photo();
-  }
-  
-  delay(1000 * 10); // wait 10 seconds  
+    if (Serial.available())
+    {
+      if (Serial.readString().equals("CAR_DETECTED") && WiFi.status() == WL_CONNECTED)
+      {
+        Serial.write(takePicture());
+        Serial.flush(); // limpa buffer
+      } 
+    }
 }

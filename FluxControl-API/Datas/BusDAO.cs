@@ -21,7 +21,7 @@ namespace FluxControlAPI.Models.Datas
             cmd.Connection = connection;
 
             cmd.CommandText = @"SELECT * FROM Buses 
-                                WHERE LicensePlate = @Identifier OR Number = @Identifier";
+                                WHERE LicensePlate = @Identifier";
 
 
             cmd.Parameters.AddWithValue("@Identifier", identifier);

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+        <!-- momentJS -->
+        <script src="lib/momentJS/moment.js"></script>
+
+        <!-- signalR -->
+        <script src="lib/signalR/signalr.min.js"></script>
+
+        <!-- angularJS -->
+        <script src="lib/angularJS/angular.min.js"></script>
+        <script src="lib/angularJS/angular-sanitize.min.js"></script>
+        <script src="js/app.js"></script>
+
+        <link rel="stylesheet" href="css/main.css">
+        <title>Controle de Tráfego Interno</title>
+    </head>
+
+    <body ng-app="arduinoApp" ng-controller="mainController" ng-init="makeLogin(100419, 123456)">
+        
+        <header>
+            
+            <div class="input-group">
+                <img src="img/top-icon_money.svg">
+                <label>Tarifa:</label>
+                <input ng-model="rules.tax" type="text">
+            </div>
+
+            <div class="input-group">
+                <img src="img/top-icon_clock.svg">
+                <label>Intervalo:</label>
+                <input ng-model="rules.intervalMinutes" type="text">
+            </div>
+
+            <button ng-click="updateRules(rules.tax, rules.intervalMinutes)" id="send-change">SALVAR</button>
+            <small class="alert" ng-bind="rules.message"></small>
+
+        </header>
+
+        <div id="flux-historic">
+
+            <div class="exit-charge" ng-repeat="alert in historic">
+
+                <div class="msg">
+                
+                    <div class="icon {{alert.type}}">
+                        <img ng-src="img/icon-{{alert.type}}.svg" width="40" height="40">
+                    </div>
+                    
+                    <div class="content">
+                        <span ng-bind-html="alert.message"></span>
+                    </div>
+                    
+                    <div class="moment">
+                        <small ng-bind=" (alert.departure || alert.arrival || alert.moment) | date : 'dd/MM/yyyy hh:mm:ss'"></small>
+                    </div>
+
+                </div>
+
+                <div ng-if="!!alert.charge" class="charge">
+                    <span ng-bind-html="alert.charge"></span>
+                </div>
+
+            </div>
+
+            <h2 style="text-align: center; color: rgb(68, 68, 68)">...</h2>
+
+        </div>
+
+    </body>
+
+</html>
