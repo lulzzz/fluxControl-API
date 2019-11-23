@@ -34,8 +34,8 @@
 #define PCLK_GPIO_NUM     22
 
 // WIFI
-const char* ssid = "not-a-virus";
-const char* password =  "1234567890";
+const char* ssid = "Kurodio";
+const char* password =  "vanessa123";
 
 const char* user_registration = "0";
 const char* user_password = "!system@emurb!";
@@ -155,10 +155,27 @@ void loop()
 {
     if (Serial.available())
     {
-      if (Serial.readString().equals("CAR_DETECTED") && WiFi.status() == WL_CONNECTED)
+      String request = Serial.readString();
+
+      if (WiFi.status() == WL_CONNECTED)
       {
-        Serial.write(takePicture());
+        if (request.equals("E"))
+        {
+          int statusCode = takePicture();
+
+           if (statusCode == 200)
+            Serial.write("E-OK");
+        } 
+
+        else if (request.equals("S"))
+        {
+          int statusCode = takePicture();
+
+          if (statusCode == 200)
+            Serial.write("S-OK");
+        }
+        
         Serial.flush(); // limpa buffer
-      } 
+      }
     }
 }
