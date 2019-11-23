@@ -70,14 +70,16 @@ namespace FluxControlAPI.Models.Datas
 
                 for (int i = 0; i < dataTable.Rows.Count; i++)
                 {
+                    var row = dataTable.Rows[i];
+
                     fleet.Add(
                     new Bus()
                     {
-                        Id = (int)dataTable.Rows[i]["Bus_Id"],
-                        Number = (string)dataTable.Rows[i]["Number"],
-                        LicensePlate = (string)dataTable.Rows[i]["LicensePlate"],
-                        CreationDate = (DateTime)dataTable.Rows[i]["CreationDate"],
-                        BusCompany = (int)dataTable.Rows[i]["Company_Id"]
+                        Id = (int)row["Bus_Id"],
+                        Number = (string)row["Number"],
+                        LicensePlate = (string)row["LicensePlate"],
+                        CreationDate = (DateTime)row["CreationDate"],
+                        BusCompany = (int)row["Company_Id"]
 
                     });
 
@@ -88,11 +90,11 @@ namespace FluxControlAPI.Models.Datas
                     {
                         model = new Company()
                         {
-                            Id = (int)dataTable.Rows[i]["Id"],
-                            Name = (string)dataTable.Rows[i]["Name"],
-                            Thumbnail = (string)dataTable.Rows[i]["Thumbnail"],
-                            InvoiceInterval = (short)dataTable.Rows[i]["Invoice_Interval"],
-                            CreationDate = (DateTime)dataTable.Rows[i]["CreationDate"],
+                            Id = (int)row["Id"],
+                            Name = (string)row["Name"],
+                            Thumbnail = (string)row["Thumbnail"],
+                            InvoiceInterval = (short)row["Invoice_Interval"],
+                            CreationDate = (DateTime)row["CreationDate"],
                             Fleet = fleet
                         };
 
@@ -126,17 +128,19 @@ namespace FluxControlAPI.Models.Datas
                 for (int i = 0; i < dataTable.Rows.Count; i++)
                 {
 
+                    var row = dataTable.Rows[i];
+
                     fleet.Add(
                     new Bus()
                     {
-                        Id = (int)dataTable.Rows[i]["Bus_Id"],
-                        Number = (string)dataTable.Rows[i]["Number"],
-                        LicensePlate = (string)dataTable.Rows[i]["LicensePlate"],
-                        BusCompany = (int)dataTable.Rows[i]["Company_Id"],
-                        CreationDate = (DateTime)dataTable.Rows[i]["CreationDate"]
+                        Id = (int)row["Bus_Id"],
+                        Number = (string)row["Number"],
+                        LicensePlate = (string)row["LicensePlate"],
+                        BusCompany = (int)row["Company_Id"],
+                        CreationDate = (DateTime)row["CreationDate"]
                     });
 
-                    if (i != dataTable.Rows.Count - 1 && (int)dataTable.Rows[i]["Id"] == (int)dataTable.Rows[i + 1]["Id"])
+                    if (i != dataTable.Rows.Count - 1 && (int)row["Id"] == (int)dataTable.Rows[i + 1]["Id"])
                         continue;
                     
                     else
@@ -144,11 +148,11 @@ namespace FluxControlAPI.Models.Datas
                         models.Add(
                         new Company()
                         {
-                            Id = (int)dataTable.Rows[i]["Id"],
-                            Name = (string)dataTable.Rows[i]["Name"],
-                            Thumbnail = (string)dataTable.Rows[i]["Thumbnail"],
-                            InvoiceInterval = (short)dataTable.Rows[i]["Invoice_Interval"],
-                            CreationDate = (DateTime)dataTable.Rows[i]["CreationDate"],
+                            Id = (int)row["Id"],
+                            Name = (string)row["Name"],
+                            Thumbnail = (string)row["Thumbnail"],
+                            InvoiceInterval = (short)row["Invoice_Interval"],
+                            CreationDate = (DateTime)row["CreationDate"],
                             Fleet = fleet
                         });
 

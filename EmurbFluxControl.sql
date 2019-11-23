@@ -19,7 +19,7 @@ CREATE TABLE Buses
 (
 	Id				INT				NOT NULL	IDENTITY PRIMARY KEY,
 	Number			VARCHAR(10)		NOT NULL,
-	LicensePlate	VARCHAR(10)		NOT NULL,
+	LicensePlate	VARCHAR(10)		NOT NULL	UNIQUE,
 	CreationDate	DATE			NOT NULL,
 	Inactive		BIT							DEFAULT 0,
 

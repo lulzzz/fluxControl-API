@@ -23,7 +23,7 @@ namespace FluxControlAPI.Controllers
 {
     
     [ApiController]
-    // [Authorize("Bearer", Roles = "System, Operator")]
+    [Authorize("Bearer", Roles = "System, Operator")]
     [Route("API/[controller]")]
     public class FlowRecordController : ControllerBase
     {
@@ -110,7 +110,7 @@ namespace FluxControlAPI.Controllers
 
         [HttpPost]
         [Route("Record")]
-        public ActionResult Record([FromBody] int busNumber)
+        public ActionResult Record([FromBody] string busNumber)
         {
             try
             {
@@ -124,7 +124,7 @@ namespace FluxControlAPI.Controllers
                     FlowRecord record;
 
                     using (var FlowRecordDAO = new FlowRecordDAO())
-                        record = FlowRecordDAO.Register(busNumber.ToString(), user);
+                        record = FlowRecordDAO.Register(busNumber, user);
 
                     if (record != null)
                     {
@@ -137,7 +137,7 @@ namespace FluxControlAPI.Controllers
                         {
                             Moment = DateTime.Now,
                             Type = SystemWarning.WarningType.NotRegistered,
-                            LicensePlate = busNumber.ToString(),
+                            LicensePlate = busNumber,
                             Message = "A placa não foi reconhecida para nenhuma empresa no banco de dados"
                         });
 

@@ -2,6 +2,7 @@
 using FluxControlAPI.Models.Datas.BusinessRule;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
@@ -75,7 +76,11 @@ namespace FluxControlAPI.Models.Datas
             SqlCommand cmd = new SqlCommand();
 
             cmd.Connection = connection;
-            cmd.CommandText = @"DELETE FROM Invoices 
+            cmd.CommandText = @"UPDATE FlowRecords
+                                SET Invoice_Id = NULL
+                                WHERE Invoice_Id = @Id;
+
+                                DELETE FROM Invoices 
                                 WHERE Id = @Id";
 
             cmd.Parameters.AddWithValue("@Id", id);
@@ -128,27 +133,79 @@ namespace FluxControlAPI.Models.Datas
 
         public Invoice Get(int id)
         {
+            Invoice model = null;
+
             SqlCommand cmd = new SqlCommand();
 
             cmd.Connection = connection;
-            cmd.CommandText = @"SELECT TOP(1) * FROM Invoices WHERE Id = @Id";
+            cmd.CommandText = @"SELECT TOP(1) invoice.*, 
+                                record.Id record_Id, record.Arrival, record.Departure, record.Bus_Id, record.User_Id, record.Invoice_Id,
+                                _user.Id User_Id, _user.Registration, _user.Email, _user.Name, _user.Type,
+                                bus.Id Bus_Id, bus.Number, bus.LicensePlate, bus.Company_Id
+                                FROM Invoices invoice
+                                JOIN FlowRecords record ON record.Invoice_Id = invoice.Id
+                                JOIN Buses bus ON record.Bus_Id = bus.Id
+                                JOIN Users _user ON record.User_Id = _user.Id
+                                WHERE invoice.Id = @Id";
 
             cmd.Parameters.AddWithValue("@Id", id);
 
-            SqlDataReader reader = cmd.ExecuteReader();
+            using (var reader = cmd.ExecuteReader())
+            {
+                var dataTable = new DataTable();
+                dataTable.Load(reader);
 
-            if (reader.Read())
-                return new Invoice()
+                var records = new List<FlowRecord>();
+
+                for (int i = 0; i < dataTable.Rows.Count; i++)
                 {
-                    Id = (int)reader["Id"],
-                    GenerationDate = (DateTime)reader["GenerationDate"],
-                    IntervalMinutesConsidered = (int)reader["IntervalMinutesConsidered"],
-                    TaxConsidered = (decimal)reader["TaxConsidered"],
-                    CompanyDebtor = (int)reader["Company_Id"],
-                    TotalCost = (decimal)reader["Total"]
-                };
+                    var row = dataTable.Rows[i];
 
-            return null;
+                    records.Add(new FlowRecord()
+                    {
+                        Id = (int)row["Id"],
+                        RegistryClerk = new User()
+                        {
+                            Id = (int)row["User_Id"],
+                            Registration = (int)row["Registration"],
+                            Email = (string)row["Email"],
+                            Name = (string)row["Name"],
+                            Type = (UserType)(short)row["Type"]
+
+                        },
+                        BusRegistered = new Bus()
+                        {
+                            Id = (int)row["Bus_Id"],
+                            Number = (string)row["Number"],
+                            LicensePlate = (string)row["LicensePlate"],
+                            BusCompany = (int)row["Company_Id"]
+                        },
+                        Arrival = (DateTime)row["Arrival"],
+                        Departure = row["Departure"] == DBNull.Value ? null : (DateTime?)row["Departure"]
+                    });
+
+                    if (i != dataTable.Rows.Count - 1)
+                        continue;
+
+                    else
+                    {
+                        model = new Invoice()
+                        {
+                            Id = (int)row["Id"],
+                            GenerationDate = (DateTime)row["GenerationDate"],
+                            IntervalMinutesConsidered = (int)row["IntervalMinutesConsidered"],
+                            TaxConsidered = (decimal)row["TaxConsidered"],
+                            CompanyDebtor = (int)row["Company_Id"],
+                            Records = records,
+                            TotalCost = (decimal)row["Total"]
+                        };
+
+                    }
+
+                }
+            }
+
+            return model;
         }
 
         public List<Invoice> Load()
@@ -156,25 +213,71 @@ namespace FluxControlAPI.Models.Datas
             SqlCommand cmd = new SqlCommand();
 
             cmd.Connection = connection;
-            cmd.CommandText = @"SELECT * FROM Invoices";
+            cmd.CommandText = @"SELECT invoice.*, 
+                                record.Id record_Id, record.Arrival, record.Departure, record.Bus_Id, record.User_Id, record.Invoice_Id,
+                                _user.Id User_Id, _user.Registration, _user.Email, _user.Name, _user.Type,
+                                bus.Id Bus_Id, bus.Number, bus.LicensePlate, bus.Company_Id
+                                FROM Invoices invoice
+                                JOIN FlowRecords record ON record.Invoice_Id = invoice.Id
+                                JOIN Buses bus ON record.Bus_Id = bus.Id
+                                JOIN Users _user ON record.User_Id = _user.Id";
 
             List<Invoice> models = new List<Invoice>();
 
-            SqlDataReader reader = cmd.ExecuteReader();
+            using (var reader = cmd.ExecuteReader())
+            {
+                var dataTable = new DataTable();
+                dataTable.Load(reader);
 
-            while (reader.Read())
-                models.Add
-                (
-                    new Invoice()
+                var records = new List<FlowRecord>();
+
+                for (int i = 0; i < dataTable.Rows.Count; i++)
+                {
+                    var row = dataTable.Rows[i];
+
+                    records.Add(new FlowRecord()
                     {
-                        Id = (int)reader["Id"],
-                        GenerationDate = (DateTime)reader["GenerationDate"],
-                        IntervalMinutesConsidered = (int)reader["IntervalMinutesConsidered"],
-                        TaxConsidered = (decimal)reader["TaxConsidered"],
-                        CompanyDebtor = (int)reader["Company_Id"],
-                        TotalCost = (decimal)reader["Total"]
+                        Id = (int)row["Id"],
+                        RegistryClerk = new User()
+                        {
+                            Id = (int)row["User_Id"],
+                            Registration = (int)row["Registration"],
+                            Email = (string)row["Email"],
+                            Name = (string)row["Name"],
+                            Type = (UserType)(short)row["Type"]
+
+                        },
+                        BusRegistered = new Bus()
+                        {
+                            Id = (int)row["Bus_Id"],
+                            Number = (string)row["Number"],
+                            LicensePlate = (string)row["LicensePlate"],
+                            BusCompany = (int)row["Company_Id"]
+                        },
+                        Arrival = (DateTime)row["Arrival"],
+                        Departure = row["Departure"] == DBNull.Value ? null : (DateTime?)row["Departure"]
+                    });
+
+                    if (i != dataTable.Rows.Count - 1)
+                        continue;
+
+                    else
+                    {
+                        models.Add(new Invoice()
+                        {
+                            Id = (int)row["Id"],
+                            GenerationDate = (DateTime)row["GenerationDate"],
+                            IntervalMinutesConsidered = (int)row["IntervalMinutesConsidered"],
+                            TaxConsidered = (decimal)row["TaxConsidered"],
+                            CompanyDebtor = (int)row["Company_Id"],
+                            Records = records,
+                            TotalCost = (decimal)row["Total"]
+                        });
+
                     }
-                );
+
+                }
+            }
 
             return models;
         }

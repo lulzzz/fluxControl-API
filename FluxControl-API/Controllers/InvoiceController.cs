@@ -77,7 +77,7 @@ namespace FluxControlAPI.Controllers
                             
                             if (invoiceDAO.SetInvoiceValue(invoice.Id, total))
                             {
-                                invoice.TotalCost = total;
+                                invoice = invoiceDAO.Get(invoice.Id);
                                 return StatusCode(200, invoice);
                             }
 
@@ -137,5 +137,80 @@ namespace FluxControlAPI.Controllers
             return StatusCode(412, new { Message = "O registro deve estar fechado para ser tarifado." });
             
         }
+
+        [HttpDelete]
+        [Route("Cancel/{id}")]
+        public ActionResult Cancel(int id)
+        {
+            try
+            {
+                using (var invoiceDAO = new InvoiceDAO())
+                    if (invoiceDAO.Cancel(id))
+                        return StatusCode(200, new { Message = "Cancelado" });
+
+                return StatusCode(304, new { Message = "Não cancelado" });
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Falha ao remover" });
+            }
+        }
+
+        #region CRUD
+
+        [HttpGet]
+        [Route("Get/{id}")]
+        public ActionResult Get(int id)
+        {
+            try
+            {
+                using (var invoiceDAO = new InvoiceDAO())
+                    return StatusCode(200, invoiceDAO.Get(id));
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Falha ao obter fatura" });
+            }
+
+        }
+
+        [HttpGet]
+        [Route("Load")]
+        public ActionResult Load()
+        {
+            try
+            {
+                using (var invoiceDAO = new InvoiceDAO())
+                    return StatusCode(200, invoiceDAO.Load());
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Falha ao carregar faturas" });
+            }
+
+        }
+
+        [HttpDelete]
+        [Route("Remove/{id}")]
+        public ActionResult Remove(int id)
+        {
+            try
+            {
+                using (var invoiceDAO = new InvoiceDAO())
+                    if (invoiceDAO.Remove(id))
+                        return StatusCode(200, new { Message = "Removido" });
+
+                return StatusCode(304, new { Message = "Não Removido" });
+            }
+
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { Message = "Falha ao remover" });
+            }
+        }
+
+        #endregion
     }
 }

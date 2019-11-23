@@ -13,6 +13,7 @@ namespace FluxControlAPI.Models.BusinessRule
         public decimal TaxConsidered { get; set; }
         public int IntervalMinutesConsidered { get; set; }
         public int CompanyDebtor { get; set; }
+        public List<FlowRecord> Records { get; set; }
         public decimal TotalCost { get; set; }
     }
 }
